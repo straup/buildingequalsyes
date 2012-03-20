@@ -1,0 +1,199 @@
+{if 0}
+{* sudo make this work... *}
+{capture assign="whereami"}
+{if $building.woe}in the {include file="inc_woe_placetype.txt _woe=$building.woe} of {include file="inc_woe_name.txt" _woe=$building.woe}{/if}
+{/capture}
+{/if}
+{capture assign="locality"}{$building.tags.woe.locality}{/capture}
+{capture assign="page_title"} {$building.id} {if $building.name} | {$building.name}{/if}{if $locality} | {$building.woe.$locality.name|escape}{/if}{/capture}
+{include file="inc_head.txt"}
+
+<h2>Building ID {$building.id|escape}</h2>
+<h3>OSM Way ID <a href="http://www.openstreetmap.org/browse/way/{$building.way_id|escape}" target="_osm">{$building.way_id|escape}</a></h3>
+
+<div id="bldg_name">
+{if $building.name}
+<h4>name</h4>
+<ul>
+<li><a href="{$cfg.abs_root_url}search/{$building.name|escape:'url'}">{$building.name|escape}</a></li>
+</ul>
+{/if}
+</div>
+
+<div id="bldg_hierarchy">
+<h4>hierarchy</h4>
+{if $building.woe|@count}
+<ul>
+
+{if $building.tags.woe.neighbourhood}
+{assign var="woeid" value=$building.tags.woe.neighbourhood}
+{assign var="row" value=$building.woe.$woeid}
+{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$row}{/capture}
+<li><a href="{$cfg.abs_root_url}woe/{$row.woeid|escape}">{$woe_name|escape}</a></li>
+{/if}
+
+{if $building.tags.woe.locality}
+{assign var="woeid" value=$building.tags.woe.locality}
+{assign var="row" value=$building.woe.$woeid}
+{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$row}{/capture}
+<li><a href="{$cfg.abs_root_url}woe/{$row.woeid|escape}">{$woe_name|escape}</a></li>
+{/if}
+
+{if $building.tags.woe.region}
+{assign var="woeid" value=$building.tags.woe.region}
+{assign var="row" value=$building.woe.$woeid}
+{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$row}{/capture}
+<li><a href="{$cfg.abs_root_url}woe/{$row.woeid|escape}">{$woe_name|escape}</a></li>
+{/if}
+
+{if $building.tags.woe.country}
+{assign var="woeid" value=$building.tags.woe.country}
+{assign var="row" value=$building.woe.$woeid}
+{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$row}{/capture}
+<li><a href="{$cfg.abs_root_url}woe/{$row.woeid|escape}">{$woe_name|escape}</a></li>
+{/if}
+
+</ul>
+{else}
+Where is this place?
+{/if}
+</div>
+
+<div id="bldg_nearby">
+<h4><a href="{$cfg.abs_root_url}nearby/{$building.centroid|escape}">nearby</a></h4>
+<ul>
+{foreach from=$nearby item="row" name="nearby"}
+<li id="building_{$row.id|escape}"><a href="{$cfg.abs_root_url}id/{$row.id|escape}">{if $row.name}<strong>{$row.name|truncate:40:'...'|escape}</strong>{else}Untitled Building #{$row.id|escape}{/if}</a></li>
+{/foreach}
+</ul>
+</div>
+
+<div id="bldg_tags">
+{if $building.tags|@count}
+
+{if $building.tags.osm|@count}
+<h4>tags</h4>
+<ul>
+{foreach from=$building.tags.osm item="value" key="pred"}
+{capture assign="url"}{$cfg.abs_root_url}tags/{$pred|escape:'url'}={$value|escape:'url'}{/capture}
+<li><a href="{$url}">{$pred|escape}={$value|truncate:40:'...'|escape}</a></li>
+{/foreach}
+</ul>
+{/if}
+
+{foreach from=$building.tags item="parts" key="ns"}
+{if $ns != 'osm'}
+<h4><q>{$ns|escape}:</q> tags</h4>
+<ul>
+{foreach from=$building.tags.$ns item="value" key="pred"}
+{capture assign="url"}{if $ns=='woe'}http://woe.spum.org/id/{$value|escape:'url'}/{else}{$cfg.abs_root_url}tags/{$ns|escape}:{$pred|escape:'url'}={$value|escape:'url'}{/if}{/capture}
+<li><a href="{$url}"{if $ns=='woe'} target="_woebd"{/if}>{$pred|escape}={$value|truncate:40:'...'|escape}</a></li>
+{/foreach}
+</ul>
+{/if}
+{/foreach}
+
+{/if}
+</div>
+
+<div id="bldg_machinetags">
+<h4>machine tags</h4>
+
+<ul>
+<li><a href="http://www.flickr.com/photos/tags/osm:way={$building.way_id|escape}" target="_flickr">osm:way={$building.way_id|escape}</a></li>
+<li><a href="http://www.flickr.com/photos/tags/bldg:id={$building.shortcode|escape}" target="_flickr">bldg:id={$building.shortcode|escape}</a></li>
+</ul>
+</div>
+
+<div id="bldg_photos">
+<h4>photos</h4>
+<div id="flickr_photos"></div>
+</div>
+
+<div id="bldg_centroid">
+<h4>centroid</h4>
+<div class="geometries">{$building.geometries.centroid|@json_encode|escape}</div>
+</div>
+
+{if 0}
+<div id="bldg_bbox">
+<h4>bounding box</h4>
+<div class="geometries">{$building.geometries.boundingbox|@json_encode|escape}</div>
+</div>
+{/if}
+
+<div id="bldg_polygon">
+<h4>polygon</h4>
+<div class="geometries">{$building.geometries.polygon|@json_encode}</div>
+</div>
+
+<div id="bldg_nodes">
+<h4>nodes</h4>
+<ul>
+{foreach from=$building.nodes item="nid" name="nodes"}
+<li><a href="{$cfg.abs_root_url}node/{$nid|escape}">{$nid|escape}</a>{if !$smarty.foreach.nodes.last}, {/if}</li>
+{/foreach}
+</ul>
+</div>
+
+<script type="text/javascript">
+var _bldg = '{$building.geometries.polygon|@json_encode}';
+var _nearby = [{foreach from=$nearby item="row"}
+	'{$row.geometries.polygon|@json_encode}',
+{/foreach}];
+
+var mt_bldg = 'bldg:id={$building.id|escape}';
+var mt_way = 'osm:way={$building.way_id|escape}';
+
+{literal}
+$(document).ready(function(){
+
+	bldg_map_building_with_nearby(_bldg, _nearby);
+	bldg_listview_mouse_events(_nearby);
+
+	// flickr photos for this building
+
+	var tags = mt_bldg + ',' + mt_way;
+
+	var req = 'http://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1';
+	req += '&api_key=ec04ad41381147cb31ef7d8e40fdb272';
+	req += '&machine_tag_mode=OR&machine_tags=' + encodeURIComponent(tags);
+	req += '&extras=url_sq';
+
+	var success = function(rsp){
+
+		rsp = JSON.parse(rsp);
+		console.log(rsp);
+
+		if ((rsp.stat != 'ok') || (rsp.photos.total == 0)){
+			return;
+		}
+
+		var count = rsp.photos.total;
+
+		for (var i=0; i < count; i++){
+			var ph = rsp.photos.photo[i];
+			var th = ph['url_sq'];
+			var url = "http://www.flickr.com/photos/" + ph['owner'] + "/" + ph['id'];
+			console.log(th);
+
+			var html = "<a href='" + url + "' target='_flickr'>";
+			html += "<img src='" + th + "' height='75' width='75' />";
+			html += "</a>";
+
+			$("#flickr_photos").append(html); 
+		}
+
+		$("#bldg_photos").show();
+	};
+
+	$.ajax({
+		'url' : req,
+		'success' : success,
+	});
+
+});
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}

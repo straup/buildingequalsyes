@@ -1,0 +1,17 @@
+{assign var="page_title" value="search"}
+{include file="inc_head.txt"}
+
+<h2>Search</h2>
+
+<form action="{$cfg.abs_root_url}search/" method="GET" id="search_form">
+	<input type="text" name="q" size="20" />
+	<input type="submit" value="FIND THIS!" />
+
+      <p>This is just for searching buildings using a full-text search engine and is <em>not</em> a geocoder. If you want to look for buildings in a particular place <a href="{$cfg.abs_root_url}woe/">head over here</a>.</p>
+
+</form>
+
+
+{include file="inc_random_building.txt"}
+
+{include file="inc_foot.txt"}

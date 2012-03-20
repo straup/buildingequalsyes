@@ -1,0 +1,35 @@
+<?php
+
+	# Things that set in the global config that you may want to override:
+
+	# $GLOBALS['cfg']['esri_featureserver_endpoints'] = array();
+	# $GLOBALS['cfg']['maptiles_template_url'] = 'http://spaceclaw.stamen.com/tiles/dotspotting/world/{Z}/{X}/{Y}.png';
+	# $GLOBALS['cfg']['maptiles_template_hosts'] = array();
+
+	# Database (there is no database, see below)
+
+	# $GLOBALS['cfg']['db_main'] = array(
+	# 	'host'	=> '',
+	# 	'user'	=> '',
+	# 	'pass'	=> '',
+	# 	'name'	=> '',
+	# 	'auto_connect' => 1,
+	# );
+
+	# Memcache
+
+	$GLOBALS['cfg']['cache_remote_engine'] = 'memcache';
+	$GLOBALS['cfg']['memcache_host'] = 'localhost';
+	$GLOBALS['cfg']['memcache_port'] = '11211';
+
+	# Disable a whole bunch of default Flamework stuff.
+	# Namely the database and user accounts.
+
+	$GLOBALS['cfg']['db_main']['auto_connect'] = 0;
+
+	$GLOBALS['cfg']['enable_feature_signup'] = 0;
+	$GLOBALS['cfg']['enable_feature_signin'] = 0;
+	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
+	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
+
+?>

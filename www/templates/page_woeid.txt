@@ -1,0 +1,40 @@
+{capture assign="woe_place"}{include file="inc_woe_placetype.txt" _woe=$woe}{/capture}
+{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$woe}{/capture}
+{capture assign="page_title"}buildings in {$woe_name} (WOE ID {$woe.woeid}){/capture}
+{include file="inc_head.txt"}
+
+<h2><a href="{$cfg.abs_root_url}woe/{$woeid|escape}/">{if $woe}{$woe_name|escape}{if 0}<span style="font-size:small;">WOE ID {$woeid|escape}<span>{/if}{else}WOE ID {$woeid|escape}{/if}</a>
+
+<span style="font-size:small;">
+{foreach from=$hierarchy item="row"}
+{if $row.placetype != 'County' and $row.woeid != 1}
+{capture assign="row_name"}{include file="inc_woe_name.txt" _woe=$row}{/capture}
+<a href="{$cfg.abs_root_url}woe/{$row.woeid|escape}">{$row_name|escape}</a>
+{/if}
+{/foreach}
+</span>
+
+</h2>
+
+{if !$pagination.total_count}
+<h3>There are no buildings in this {$woe_place|escape}{if $has_tag} tagged <q>{$has_tag|escape}</q>{/if}.</h3>
+{elseif $pagination.total_count == 1}
+<h3>There is one building in this {$woe_place|escape}{if $has_tag} tagged <q>{$has_tag|escape}</q>{/if}.</h3>
+{else}
+<h3>There are {$pagination.total_count|number_format|escape} buildings in this {$woe_place|escape}{if $has_tag} tagged <q>{$has_tag|escape}</q>{/if}.</h3>
+{/if}
+
+{if $tags|@count}
+<div id="woe_tags">
+The top tags for this {$woe_place|escape} are: 
+<ul>
+{foreach from=$tags item="row" key="tag" name="woe_tags"}
+<li><a href="{$cfg.abs_root_url}tags/{$tag|escape:'url'}/w:{$woe.woeid|escape}/">{$tag|truncate:40:'...'|escape}</a>{if !$smarty.foreach.woe_tags.last}, {/if}</li>
+{/foreach}
+</ul>
+</div>
+{/if}
+
+{include file="inc_buildings_list.txt"}
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,304 @@
+body {
+    margin: 0px;
+    padding:0 px;
+    font-family:sans-serif;
+    background-color:#fff;
+}
+
+a {
+	color:#000;
+	text-decoration:none;
+}
+
+a:hover {
+    text-decoration:underline;
+    color:#2B547E;
+}
+
+#header {
+	font-size:11px;
+	text-align:right;
+	position:fixed;
+	bottom:0;
+	left:50%;
+	background-color:#fff;
+	line-height:1em;
+	width:50%;
+}
+
+#header_stuff {
+    	border-top: solid thin;
+	margin-top:10px;
+	padding:20px;
+}
+
+#header a {
+	color: #666;
+	text-decoration: none;
+}
+
+#container {
+position:fixed;
+top:0;
+left: 0;
+height:100%;
+width:48%;
+border-right: 3px solid #000;
+}
+
+#map {
+height:100%;
+//background-color: #666;
+background-image: url(/images/dot.gif);
+}
+
+#details {
+position:absolute;
+top:0;
+left:50%;
+margin-left:2%;
+margin-right:5%;
+font-size: .8em;
+padding-top:23px;
+padding-bottom:10%;;
+font-size:1.3em;
+line-height:1.5em;
+background-color:#fff;
+width:44%;
+max-width:44%;
+}
+
+h2 {
+    padding:0;
+    margin-top:5px;
+    margin-bottom:0px;
+
+}
+
+h3 {
+    padding:0;
+    margin-top:5px;
+    margin-bottom:20px;
+    font-size:.6em;
+}
+
+h4 {
+    margin: 0;
+    margin-bottom:10px;
+    background-color:#ccc;
+    padding:5px;
+}
+
+ul {
+    margin:0px;
+    margin-bottom:20px;
+    padding: 0px;
+}
+
+li {
+	list-style: none;
+}
+
+ol {
+    margin:0px;
+    padding: 0px;
+}
+
+ol li:before {
+	content: counter(item) ".  ";
+	counter-increment: item;
+	color: #ccc;
+}
+
+#bldg_photos {
+    display:none;
+    margin-bottom:20px;
+}
+
+#flickr_photos {
+    padding-top:10px;
+}
+
+#flickr_photos img {
+	border:none;
+	margin-bottom:15px;
+	margin-right:15px;
+}
+
+#bldg_random {
+	margin-top:20%;
+	font-size:.8em;
+}
+
+.bldg_isin {
+	font-style:italic;
+	font-size:11px;
+	margin-left:5%;
+}
+
+.bldg_id {
+	font-weight: 700;
+}
+
+#bldg_nodes ul {
+    
+}
+
+#bldg_nodes ul li {
+	display:inline;
+}
+
+#bldg_nearby ul li {
+	display:block;
+}
+
+#pagination {
+	margin-top:30px;
+	margin-left:0;
+	text-align:center;
+	width:100%:
+}
+
+.disabled {
+    color: #ccc;
+}
+
+.geometries {
+	margin-top:20px;
+	margin-bottom:20px;
+	word-wrap: break-word;
+}
+
+#bldg_places {
+    font-size:11px;
+    line-height:14px;
+    margin-bottom:25px;
+}
+
+#bldg_places ul li {
+    display: inline;
+}
+
+#bldg_places ul {
+    display: inline;
+}
+
+.bldg_places_blist {
+    display:none;
+}
+
+#woe_tags {
+    font-size:11px;
+    line-height:14px;
+    margin-bottom:25px;
+}
+
+#woe_tags ul {
+    display: inline;
+}
+
+#woe_tags ul li {
+    display: inline;
+    font-style: italic;
+}
+
+.woe_tags_blist{
+    display:none !important;
+}
+
+#search_form{
+    margin-top: 15%;
+    margin-bottom: 5%;
+}
+
+#search_form p {
+    margin-top:40px;
+	font-size: 11px;
+	line-height: 16px;
+	width:80%;
+	font-style:italic;
+	color:#666;
+}
+
+input {
+    border: solid thin;
+    padding: 10px;
+    font-size:14pt;
+    font-weight:700;
+}
+
+input[type='submit'] {
+    padding:9px;
+}
+
+#geocode_form{
+    margin-top: 15%;
+    margin-bottom: 5%;
+}
+
+#geocode_feedback {
+	margin-top:10%;
+}
+
+#geocode_feedback ul {
+	margin-top:25px;
+	margin-left:75px;
+}
+
+#geocode_feedback ul li {
+	padding:5px;
+	list-style-type: decimal
+}
+
+#geocode_feedback ul li:hover {
+	background-image: url(/images/dot.gif);
+}
+
+#geoloc_feedback {
+	margin-top:10%;
+}
+
+#bldg_about {
+	margin-top:10%;
+}
+
+#bldg_about h3 {
+    font-size:1em;
+    border-bottom:solid thin;
+    padding-bottom:5px;
+    margin-top:25px;
+}
+
+#bldg_about p {
+	font-size: .9em;
+}
+
+#bldg_intro {
+	margin-top:12%;
+}
+
+#bldg_intro p {
+	margin-bottom:30px;
+}
+
+#bldg_error {
+	margin-top:12%;
+}
+
+.footnote_ref {
+	font-size:11px;
+	color:#adadad;
+	vertical-align:super;
+}
+
+.footnote {
+	font-size:11px;
+	font-style:italic;
+	color:#adadad;
+}
+
+.title:after {
+    content: url(/favicon.ico);
+    padding-left: 15px;
+    padding-bottom: 5px;
+}

@@ -1,0 +1,32 @@
+{
+
+	"default_format": "json",
+
+	"formats": [
+		"json"
+	],
+	
+	"methods": {
+		"test.echo": {
+			"library": "api_test",
+			"description": "...",
+			"enabled": 1,
+			"documented": 1,
+			"requires_auth": 0,
+			"paginated": 0,
+			"method": "GET",
+			"example": ""
+		},
+
+		"buildings.getInfo": {
+			"library": "api_buildings",
+			"description": "...",
+			"enabled": 1,
+			"documented": 1,
+			"requires_auth": 0,
+			"paginated": 0,
+			"method": "GET",
+			"example": ""
+		}
+	}
+}

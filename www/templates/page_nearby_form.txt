@@ -1,0 +1,72 @@
+{assign var="page_title" value="buildings near you"}
+{include file="inc_head.txt"}
+
+<h2>Buildings Near You</h2>
+
+<div id="geoloc_feedback"></div>
+
+{include file="inc_random_building.txt"}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function(){
+	findme();
+});
+
+function findme(){
+
+	var sad_face = function(msg){
+
+		var html = "There was a problem figuring out your location.";
+
+		if (msg){
+			html += " The robot squirrels report: <em>" + htmlspecialchars(msg) + "</em>.";
+		}
+
+		$("#geoloc_feedback").html(html);
+	};
+
+	var success = function(position){
+
+		var coords = position.coords;
+		var lat = coords.latitude;
+		var lon = coords.longitude;
+
+		var url = '/nearby/' + encodeURIComponent(lat) + ',' + encodeURIComponent(lon);
+
+		$("#geoloc_feedback").html("Aha! I've found you and will take you to the buildings in a moment...");
+
+		setTimeout(function(){
+			location.href = url;
+		}, 3000);
+
+		return;
+	};
+
+	var error = function(err){
+		// The message attribute must return an error message describing the details
+		// of the error encountered. This attribute is primarily intended for debugging
+		// and developers should not use it directly in their application user interface. 
+		sad_face(err.message);
+	};
+
+	try {
+		navigator.geolocation.getCurrentPosition(success, error);
+		$("#geoloc_feedback").html("Asking the sky where you are...");
+	}
+
+	catch (e){
+		sad_face("The magic geo-thread that connects you to the sky is busted!");
+	}
+    
+	setTimeout(function(){
+		sad_face("The magic geo-thread that connects you to the sky is not answering (probably because it's covered in lard or something)");
+		$("#geoloc_feedback").append("<br /><br /><a href=\"#\" onclick=\"findme();return false;\">Try again?</a>");
+	}, 30000);
+}
+
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}

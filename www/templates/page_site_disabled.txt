@@ -1,0 +1,7 @@
+{include file="inc_head.txt"}
+
+<h2 class="title">building=yes</h2>
+
+<p>The site is currently disabled and will return shortly.</p>
+
+{include file="inc_foot.txt"}

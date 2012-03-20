@@ -1,0 +1,21 @@
+{assign var="page_title" value="this thing you are looking for does not exist"}
+{include file="inc_head.txt"}
+
+<h2>You are here</h2>
+
+<div id="bldg_error">
+<p>This thing you are looking for does not exist. No.</p>
+</div>
+
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+
+	$('#map').css("background-image", "url(/images/null-dithered.png)");
+	return;
+});
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}
+

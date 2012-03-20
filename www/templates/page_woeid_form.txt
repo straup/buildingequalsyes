@@ -1,0 +1,134 @@
+{include file="inc_head.txt"}
+
+<h2>Search for a place</h2>
+
+<div id="geocode_feedback"></div>
+
+<form action="{$cfg.abs_root_url}woe/" method="GET" id="geocode_form">
+	<input type="text" name="q" size="20" />
+	<input type="submit" value="FIND THIS!" />
+</form>
+
+{include file="inc_random_building.txt"}
+
+<script type="text/javascript">
+{literal}
+
+$(document).ready(function(){
+
+	$("#geocode_form").submit(function(){
+
+		var q = $('input:first').val();
+
+		if (! q){
+			return false;
+		}
+
+		_flickr_geocode(q);
+		return false;
+	});
+
+	// make to work with location.href
+	var hash = location.hash.replace('#', '');
+
+	if (hash.length){
+		_flickr_geocode(hash);
+	}
+});
+
+function reset_form(){
+	$('#geocode_feedback').html('');
+	$('#geocode_form').show();
+	return false;
+}
+
+function _flickr_geocode(q){
+
+	var enc_q = htmlspecialchars(q);
+
+	var req = 'http://api.flickr.com/services/rest/?method=flickr.places.find&format=json&nojsoncallback=1';
+	req += '&api_key=ec04ad41381147cb31ef7d8e40fdb272';
+	req += '&query=' + encodeURIComponent(q);
+
+	var sad_face = function(msg){
+		var html = "There was a problem figuring out where \"" + enc_q + "\" is.";
+
+		if (msg){
+			html += " The robot squirrels report: <em>" + htmlspecialchars(msg) + "</em>.";
+		}
+
+		html += " <a href=\"#\" onclick=\"reset_form();\">Try again?</a>";
+
+		$("#geocode_feedback").html(html);
+	};
+
+	var success = function(rsp){
+
+		location.href = "/woe/#" + encodeURIComponent(q);
+
+		rsp = JSON.parse(rsp);
+		// console.log(rsp);
+
+		if (rsp['stat'] != 'ok'){
+			sad_face(rsp['message']);
+			return;
+		}
+
+		if (rsp.places.total == 0){
+			sad_face("The sky has never met that place.");
+			return;
+		}
+
+		if (rsp.places.total == 1){
+			var woeid = rsp.places.place[0].woeid;
+			var url = '/woe/' + encodeURIComponent(woeid);
+
+			$("#geocode_feedback").html("Okay! I've found \"" + enc_q + "\" and will take you there in just a moment...");
+
+			setTimeout(function(){
+				location.href = url;
+				return;
+			}, 3000);
+
+			return;
+		}
+
+		var ol = document.createElement("ul");
+
+		for (var i = 0; i < rsp.places.total; i++){
+
+			var name = rsp.places.place[i]['_content'];
+			var woeid = rsp.places.place[i]['woeid'];
+
+			var url = '/woe/' + woeid;
+
+			var t = document.createTextNode(name);
+
+			var a = document.createElement("a");
+			a.setAttribute("href", url);
+			a.appendChild(t);
+
+			var li = document.createElement("li");
+			li.appendChild(a);
+			ol.appendChild(li);
+		}
+
+		$("#geocode_feedback").html("Hrm. Which \"" + enc_q + "\" did you mean?");
+		$("#geocode_feedback").append(ol);
+		$("#geocode_feedback").append("Or: <a href=\"#\" onclick=\"reset_form();\">Try again?</a>");
+
+	};
+
+	$.ajax({
+		'url' : req,
+		'success' : success,
+	});
+
+	$("#geocode_feedback").html("Asking the sky where \"" + enc_q + "\" is now...");
+	$("#geocode_form").hide();
+}
+
+{/literal}
+</script>
+
+{include file="inc_foot.txt"}

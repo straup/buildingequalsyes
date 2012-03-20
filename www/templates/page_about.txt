@@ -1,0 +1,52 @@
+{capture assign="page_title"}about{/capture}
+{include file="inc_head.txt"}
+
+<h2>About building=yes</h2>
+
+<div id="bldg_about">
+
+<h3>What is this?</h3>
+
+<p><strong>building=yes</strong> is a searchable and linkable index of every single <q><a href="http://wiki.openstreetmap.org/wiki/Elements#Way" target="_osm">way</a></q> tagged <code>building=yes</code> in OpenStreetMap (OSM).</p>
+
+<p>Currently there are just over 26 million buildings in the database.</p>
+
+<h3>Why did you do this?</h3>
+
+<p><a href="http://www.aaronland.info/talks/bwr_201101/" target="_bwr">I like buildings.</a></p>
+
+<h3>How often does it get updated?</h3>
+
+<p>Not at all, yet.</p>
+
+<p>I would like to be able to update the site every month or so but I decided to just get it up and running before I tackled how to keep it current with the OSM database.</p>
+
+<h3>How can I contribute?</h3>
+
+<p>Go and <a href="http://wiki.openstreetmap.org/wiki/Creating_an_Account" target="_osm">create an OpenStreetMap (OSM) account</a> and edit the map!</p>
+
+<p>It is on the <q>to do</q> list to add the ability to update a building record on this site and then post the changes back to OSM using their API but I haven't even gotten started on that yet.</p>
+
+<h3>Why does each building also have a 64-bit ID?</h3>
+
+<p>Each building is given its own unique 64-bit identifier so that they can <q>fit</q> in to existing databases of places, specifically <a href="http://woe.spum.rg/" target="_woedb">Where On Earth</a> (WOE), without accidentally stomping over any existing IDs.</p>
+
+<p>Because WOE uses 32-bit identifiers the very first <strong>building=yes</strong> ID is 32-bits + 1 (or <a href="{$cfg.abs_root_url}id/2147483648/">2147483648</a>).</p>
+
+<h3>Where did all the Where On Earth IDs come from?</h3>
+
+<p><a href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html" target="_flickr">Flickr!</a></p>
+
+<p>Shortly, I hope to import them all back in to OpenStreetMap so that each building (specifically, each way tagged <code>building=yes</code>) will have one or more <code>woe:PLACETYPE=WOEID</code> tags associated with it.</p>
+
+<h3>Can I get a copy of the data?</h3>
+
+<p>Yes.</p>
+
+<p>There's quite a lot of it – something on the order of 15 to 20 gigabytes uncompressed – so I am going to have a think about the best way to distribute the data. It will probably be something like a BitTorrent download. I will post something <a href="http://www.twitter.com/thisisaaronland">via Twitter</a> once I've worked out the details.</p>
+
+</div>
+
+{include file="inc_random_building.txt"}
+
+{include file="inc_foot.txt"}

@@ -1,0 +1,51 @@
+<div id="bldgs_list">
+{capture assign="p"}{$pagination.page-1}{/capture}
+{capture assign="reset"}{$p*$pagination.per_page}{/capture}
+<ol style="counter-reset: item {$reset};">
+{foreach from=$buildings item="row" name="bldgs"}
+{capture assign="p_woeid"}{$row.parent_woeid}{/capture}
+<a name="building_{$row.id|escape}"></a>
+<li id="building_{$row.id|escape}">
+	<a href="{$cfg.abs_root_url}id/{$row.id|escape}">{if $row.name}<strong>{$row.name|escape}</strong>{else}Untitled Building #{$row.id|escape}{/if}</a>
+
+	<div class="bldg_isin"> 
+	{if $p_woeid}
+	{assign var="p_woe" value=$row.woe.$p_woeid}
+	{capture assign="p_name"}{include file="inc_woe_name.txt" _woe=$p_woe}{/capture}
+	{capture assign="p_type"}{include file="inc_woe_placetype.txt" _woe=$p_woe}{/capture}
+	{if $p_woe}in the {$p_type|escape} of <a href="{$cfg.abs_root_url}woe/{$p_woeid|escape}/{if $has_tag}t:{$has_tag|escape}/{/if}">{$p_name|escape}</a>.{else}which is ...uh, somewhere.{/if}
+	{else}
+	which the sky hasn't found yet...
+	{/if}
+	</div>
+
+</li>
+{/foreach}
+</ol>
+
+</div>
+
+{include file="inc_pagination.txt"}
+
+<script type="text/javascript">
+
+var _bldgs = [{foreach from=$buildings item="row"}
+	'{$row.geometries.polygon|@json_encode}',
+	'{$row.geometries.centroid|@json_encode}',
+{/foreach}];
+
+{literal}
+$(document).ready(function(){
+
+	if (! _bldgs.length){
+		$('#map').css("background-image", "url(/images/null-dithered.png)");
+		return;
+	}
+
+	bldg_map_buildings(_bldgs);
+
+	bldg_listview_mouse_events(_bldgs);
+	bldg_listview_pagination_hooks();
+});
+{/literal}
+</script>

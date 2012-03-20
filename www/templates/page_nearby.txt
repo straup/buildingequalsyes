@@ -1,0 +1,17 @@
+{capture assign="whereami"}{$lat}, {$lon}{/capture}
+{capture assign="page_title"}buildings near {$whereami}{/capture}
+{include file="inc_head.txt"}
+
+<h2>Nearby</h2>
+
+{if !$pagination.total_count}
+<h3>There are no buildings in this {$whereami|escape}.</h3>
+{elseif $pagination.total_count == 1}
+<h3>There is one building in this {$whereami|escape}.</h3>
+{else}
+<h3>There are {$pagination.total_count|number_format|escape} buildings near {$whereami|escape}.</h3>
+{/if}
+
+{include file="inc_buildings_list.txt"}
+
+{include file="inc_foot.txt"}

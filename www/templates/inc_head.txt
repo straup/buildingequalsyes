@@ -1,0 +1,44 @@
+{utf8_headers}
+<html>
+	<head>
+		<title>[building=yes]{if $page_title} {$page_title|escape}{/if}</title>
+		<link rel="stylesheet" type="text/css" href="{$cfg.abs_root_url}/css/index.css" />
+
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/raphael-1.5.2.min.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/array_merge.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmlspecialchars.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.min.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.markers.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/buildingequalsyes.js"></script>
+
+{if $building}
+		<link id="canonicalurl" rel="canonical" href="{$cfg.abs_root_url}id/{$building.id|escape}/">
+		<link id="shorturl" rev="canonical" type="text/html" href="{$cfg.abs_root_url}id/{$building.shortcode|escape}/">
+{/if}
+	</head>
+
+	<body>
+
+		<div id="container">
+			<div id="map"></div>
+		</div>
+
+		<div id="details">
+			<div id="header">
+
+				<div id="header_stuff">
+					<a href="{$cfg.abs_root_url}">building=yes</a> | 
+					<a href="{$cfg.abs_root_url}about/">about</a> |
+					<a href="{$cfg.abs_root_url}search/">search</a> |
+					<a href="{$cfg.abs_root_url}random/">random</a> |
+					<a href="{$cfg.abs_root_url}nearby/">nearby</a>
+{if $cfg.user.id}
+					| you are signed in as <a href="http://www.openstreetmap.org/user/{$cfg.user.username|escape}/" style="font-weight:700;" target="osm">{$cfg.user.username|escape}</a>
+					| <a href="{$cfg.abs_root_url}signout/" style="font-weight:700;">sign out</a>
+{/if}
+					<br /><br />
+					this is a thing by <a href="http://www.aaronland.info/" target="_aaronland">aaron straup cope</a> |
+					data ccbysa <a href="http://www.openstreetmap.org/" target="_osm">osm</a> contributors
+				</div>
+			</div>

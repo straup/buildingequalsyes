@@ -1,0 +1,20 @@
+{include file="inc_head.txt"}
+
+<h2 class="title">building=yes</h2>
+
+<div id="bldg_intro">
+<p><strong>building=yes</strong> is a searchable and linkable index of every single <q><a href="http://wiki.openstreetmap.org/wiki/Elements#Way" target="_osm">way</a></q> tagged <code>building=yes</code> in OpenStreetMap (OSM).</p>
+
+<p style="font-weight:700;">A web page for <a href="{$cfg.abs_root_url}random/">every building</a> in OpenStreetMap!</p>
+
+<p>You can link to buildings using their <a href="{$cfg.abs_root_url}id/2147773745/">64-bit <strong>building=yes</strong> identifier</a> or their <a href="{$cfg.abs_root_url}way/27831699/">OSM way ID</a>.</p>
+
+<p>Each building has been tagged with one or more <a href="http://woe.spum.org" target="_woedb">Where On Earth (WOE) IDs</a> so you can also <a href="{$cfg.abs_root_url}woe/12521721/">search for buildings by place</a>.</p>
+
+<p class="footnote">Where <q>every single way</q> means every single way as of late-January 2011.</p>
+
+</div>
+
+{include file="inc_random_building.txt"}
+
+{include file="inc_foot.txt"}

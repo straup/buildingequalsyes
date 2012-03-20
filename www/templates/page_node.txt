@@ -1,0 +1,13 @@
+{include file="inc_head.txt"}
+
+<h2>OSM Node #{$nodeid|escape}</h2>
+
+{if $pagination.total_count == 1}
+<h3>This node is part of one building.</h3>
+{else}
+<h3>This node is part of {$pagination.total_count|number_format|escape} buildings.</h3>
+{/if}
+
+{include file="inc_buildings_list.txt"}
+
+{include file="inc_foot.txt"}

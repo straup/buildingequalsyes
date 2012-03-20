@@ -1,0 +1,15 @@
+{include file="inc_head.txt"}
+
+<h2><q>{$q|escape}</q></h2>
+
+{if !$pagination.total_count}
+<h3>There are no buildings matching this query.</h3>
+{elseif $pagination.total_count == 1}
+<h3>There is one building matching this query.</h3>
+{else}
+<h3>There are {$pagination.total_count|number_format|escape} buildings matching this query.</h3>
+{/if}
+
+{include file="inc_buildings_list.txt"}
+
+{include file="inc_foot.txt"}

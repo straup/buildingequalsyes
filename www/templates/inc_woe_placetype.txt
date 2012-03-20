@@ -1,0 +1,1 @@
+{if $_woe.placetype=='Suburb'}neighbourhood{elseif $_woe.placetype=='Town' or $_woe.placetype=='LocalAdmin'}locality{elseif $_woe.placetype=='State'}region{else}{$_woe.placetype|@strtolower}{/if}

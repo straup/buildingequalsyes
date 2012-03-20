@@ -1,0 +1,57 @@
+#
+# Hey! Everything in here is better suited to httpd.conf, since
+# we get a performance boost if we can turn off AllowOverride and
+# not have to stat the webroot for every request. On the other
+# hand, this measn we never have to touch apache once it's up.
+# Flexibility over performance.
+#
+# In an ideal world, you'd stick it in here on dev and your build
+# system would bundle the changes into (a file incldued in) httpd.conf
+# for your production deployment. Yeah. Do that.
+#
+
+Order Allow,Deny
+Allow from all
+Deny from none
+
+FileETag none
+
+php_flag display_errors on
+
+php_value magic_quotes_gpc 0
+php_value register_globals 0
+php_value magic_quotes_runtime 0
+php_value track_errors 1
+php_value last_modified off
+php_value short_tags on
+php_value error_reporting 2147483639
+
+DirectoryIndex index.php
+
+ErrorDocument	404 /404.php
+
+RewriteEngine on
+RewriteBase /
+
+# index.php is taken care by the directory index
+
+RewriteRule ^signin/?$						signin_osm_oauth.php?%{QUERY_STRING} [L]
+RewriteRule ^signout/?$						signout.php?%{QUERY_STRING} [L]
+RewriteRule ^checkcookie/?$					checkcookie.php?%{QUERY_STRING} [L]
+RewriteRule ^auth/?$						auth_callback_osm_oauth.php?%{QUERY_STRING} [L]
+
+RewriteRule ^api/?$						api_rest.php?%{QUERY_STRING} [L]
+
+RewriteRule ^id/([0-9]+)/?$					building.php?id=$1&%{QUERY_STRING} [L]
+RewriteRule ^b/([a-zA-Z0-9]+)/?$				building.php?shortcode=$1&%{QUERY_STRING} [L]
+RewriteRule ^way(?:id)?/([0-9]+)/?$				building.php?wayid=$1&%{QUERY_STRING} [L]
+
+RewriteRule ^about/?$						about.php?%{QUERY_STRING} [L]
+RewriteRule ^random/?$						random.php [L]
+
+RewriteRule ^woe(?:id)?(?:/([0-9]+))?(?:/t:([^/]+))?(?:/page([0-9]+))?/?$		woeid.php?woeid=$1&tag=$2&page=$3&%{QUERY_STRING} [L]
+RewriteRule ^node(?:id)?/([0-9]+)(?:/page([0-9]+))?/?$		node.php?nodeid=$1&page=$2&%{QUERY_STRING} [L]
+RewriteRule ^tags/([^/]+)(?:/w:([0-9]+))?(?:/page([0-9]+))?/?$			tags.php?tag=$1&woeid=$2&page=$3&%{QUERY_STRING} [L]
+
+RewriteRule ^nearby/([^/]+)?(?:/page([0-9]+))?/?$		nearby.php?ll=$1&page=$2&%{QUERY_STRING} [L]
+RewriteRule ^search/([^/]+)?(?:/page([0-9]+))?/?$		search.php?q=$1&page=$2&%{QUERY_STRING} [L]

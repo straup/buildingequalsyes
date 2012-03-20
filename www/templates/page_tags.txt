@@ -1,0 +1,32 @@
+{capture assign="page_title"}buildings tagged "{$tag}"{/capture}
+{include file="inc_head.txt"}
+
+<h2><a href="{$cfg.abs_root_url}tags/{$tag|escape}/">{$tag|escape}</a></h2>
+
+{if $has_woeid}{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$woe}{/capture}{/if}
+
+{if !$pagination.total_count}
+<h3>There are no buildings with that tag{if $has_woeid} in <a href="{$cfg.abs_root_url}woe/{$woe.woeid|escape}/">{$woe_name|escape}</a>{/if}.</h3>
+{elseif $pagination.total_count == 1}
+<h3>There is one building with this tag{if $has_woeid} in <a href="{$cfg.abs_root_url}woe/{$woe.woeid|escape}/">{$woe_name|escape}</a>{/if}.</h3>
+{else}
+<h3>There are {$pagination.total_count|number_format|escape} buildings with this tag{if $has_woeid} in <a href="{$cfg.abs_root_url}woe/{$woe.woeid|escape}/">{$woe_name|escape}</a>{/if}.</h3>
+{/if}
+
+{if $has_woeid and $places|@count==0}{/if}
+
+{if $places|@count}
+<div id="bldg_places">
+The top cities for this tag are: 
+<ul>
+{foreach from=$places item="row" name="bldg_places"}
+{capture assign="woe_name"}{include file="inc_woe_name.txt" _woe=$row}{/capture}
+<li><a href="{$cfg.abs_root_url}woe/{$row.woeid|escape}/t:{$tag|escape}" title="{$row.bldg_tag_count|escape} times">{$woe_name|escape}</a>{if !$smarty.foreach.bldg_places.last}, {/if}</li>
+{/foreach}
+<ul>
+</div>
+{/if}
+
+{include file="inc_buildings_list.txt"}
+
+{include file="inc_foot.txt"}
