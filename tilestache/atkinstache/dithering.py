@@ -3,14 +3,15 @@ logging.basicConfig(level=logging.DEBUG)
 
 import TileStache
 
-import PIL.Image
-import PIL.ImageFilter
+try:
+    import PIL.Image as Image
+    import PIL.ImageFilter as ImageFilter
+except Exception, e:
+    import Image
+    import ImageFilter
+
 import StringIO
 import md5
-
-# TO DO: pure python and import nonsense
-
-import atk
 
 class Provider:
 
@@ -21,8 +22,6 @@ class Provider:
 
 	self.skip_on_checksum = kwargs.get('skip_on_checksum', False)
         self.checksum = kwargs.get('checksum', None)
-
-        # TO DO: pure python...
 
         try:
             import atk
@@ -44,9 +43,9 @@ class Provider:
              
             if hash.hexdigest() == self.checksum:
                 logging.info('[dithering] skip check sum matches %s : %s' % (coord, self.checksum))
-		return PIL.Image.new('RGBA', (256, 256))
+		return Image.new('RGBA', (256, 256))
             
-        img = PIL.Image.open(StringIO.StringIO(body))
+        img = Image.open(StringIO.StringIO(body))
 
         if self.plotter == 'atk':
             return self.dither_atk(img)
@@ -54,9 +53,10 @@ class Provider:
         return self.dither_python(img)
 
     def dither_atk(self, img):
+	import atk
 	img = img.convert('L')        
 	tmp = atk.atk(img.size[0], img.size[1], img.tostring())
-	new = PIL.Image.fromstring('L', img.size, tmp)
+	new = Image.fromstring('L', img.size, tmp)
 	return new.convert('RGBA')
 
     def dither_python(self, img):
