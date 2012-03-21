@@ -46,7 +46,7 @@
 			}
 		},
 
-		"foo": {
+		"buildingequalyes": {
 			"provider": {
 				"class": "TileStache.Goodies.Providers.Composite:Provider",
 				"kwargs": {
