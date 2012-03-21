@@ -16,7 +16,7 @@
 
 		"dithered": {
 			"provider": {
-				"class": "Atkinstache.dithering.Provider",
+				"class": "atkinstache.dithering.Provider",
 				"kwargs": {
 					"source_layer": "microsoft_aerial"
 				}
