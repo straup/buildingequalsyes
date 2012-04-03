@@ -4,7 +4,6 @@
 	loadlib("base58");
 
 	loadlib("solr");
-	loadlib("solr_buildings");
 
 	#################################################################
 
@@ -57,19 +56,29 @@
 
 	#################################################################
 
-	function buildings_get_nearby_for_building(&$building, $more=array()){
+	function buildings_get_nearby_for_building($building, $more=array()){
 
 		$args = array(
 			"q" => "NOT id:{$building['id']}",
-			"pt" => $building['centroid'],
 		);
 
-		return buildings_get_nearby($args, $more);
+		list($lat, $lon) = explode(",", $building['centroid'], 2);
+
+		$more['sfield'] = 'centroid';
+
+		$rsp = solr_select_nearby($lat, $lon, $args, $more);
+
+		if ($rsp['ok']){
+			$rows = _buildings_inflate_rows($rsp);
+			$rsp['rows'] = $rows;
+		}
+
+		return $rsp;
 	}
 
 	#################################################################
 
-	function buildings_get_nearby($args, $more=array()){
+	function buildings_get_nearby($lat, $lon, $args, $more=array()){
 
 		$defaults = array(
 			"q" => "*:*",
@@ -78,31 +87,7 @@
 
 		$args = array_merge($defaults, $args);
 
-		$args["fq"] = "{!geofilt}";
-		$args["sfield"] = "centroid";
-		$args["sort"] = "geodist() asc";
-
-		return _buildings_fetch_paginated($args, $more);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$nearby = array();
-
-		foreach ($rsp['data']['response']['docs'] as $b){
-			$nearby[] = array(
-				'id' => $b['id'],
-				'name' => $b['name'],
-				'polygon' => $b['polygon'],
-			);
-		}
-
-		return array(
-			'ok' => 1,
-			'rows' => $nearby,
-			'pagination' => $rsp['pagination'],
-		);
+		return solr_select_nearby($lat, $lon, $args);
 	}
 
 	#################################################################
@@ -393,7 +378,7 @@
 			$args['rows'] = 0;
 		}
 
-		$rsp = solr_buildings_select($args);
+		$rsp = solr_select($args);
 		return $rsp;
 	}
 
@@ -423,62 +408,7 @@
 
 	#################################################################
 
-	function _buildings_fetch_paginated_old(&$args, $more=array()){
-
-		$page = (isset($more['page'])) ? max(1, $more['page']) : 1;
-		$per_page = isset($more['per_page']) ? max(1, $more['per_page']) : 10;
-
-		$args['start'] = $per_page * ($page - 1);
-		$args['rows'] = $per_page;
-
-		#
-
-		if ($more['sort_by_ip']){
-			if ($_args = _buildings_sort_by_ip()){
-				$args = array_merge($args, $_args);
-			}
-		}
-
-		#
-
-		$rsp = _buildings_fetch($args, $more);
-
-		if (! $rsp['ok']){
-			return $rsp;
-		}
-
-		$count = $rsp['data']['response']['numFound'];
-		$pages = ceil($count / $per_page);
-
-		$pagination = array(
-			'page' => $page,
-			'per_page' => $per_page,
-			'page_count' => $pages,
-			'total_count' => $count,
-		);
-
-		if (($GLOBALS['cfg']['pagination_assign_smarty_variable']) && (! isset($more['donot_assign_pagination']))){
-			$GLOBALS['smarty']->assign('pagination', $pagination);
-			$GLOBALS['smarty']->register_function('pagination', 'smarty_function_pagination');
-		}
-
-		if (isset($more['donot_inflate'])){
-			$rsp['pagination'] = $pagination;
-			return $rsp;
-		}
-
-		$rows = _buildings_inflate_rows($rsp);
-
-		return array(
-			'ok' => 1,
-			'rows' => $rows,
-			'pagination' => $pagination,
-		);
-	}
-
-	#################################################################
-
-	function _buildings_fetch_one(&$args){
+	function _buildings_fetch_one($args){
 
 		$rsp = _buildings_fetch($args);
 
@@ -578,45 +508,6 @@
 			'properties' => $properties,
 			'geometry' => $polygon,
 		);
-
-		if (0){
-
-		$swlat = null;
-		$swlon = null;
-		$nelat = null;
-		$nelon = null;
-
-		foreach ($row['geometries']['polygon']['coordinates'] as $pt){
-
-			list($lon, $lat) = $pt;
-
-			if ((! $swlat) || ($lat > $swlat)){
-				$swlat = $lat;
-			}
-
-			if ((! $swlon) || ($lat > $swlon)){
-				$swlon = $lat;
-			}
-
-			if ((! $nelat) || ($lat < $nelat)){
-				$nelat = $lat;
-			}
-
-			if ((! $nelon) || ($lon < $nelon)){
-				$nelon = $lon;
-			}
-		}
-
-		$row['geometries']['boundingbox'] = array(
-			'type' => 'Feature',
-			'properties' => $properties,
-			'geometry' => array(
-				'type' => 'Polygon',
-				'coordinates' => array()
-			),
-		);
-
-		}
 
 		list($lat, $lon) = explode(",", $row['centroid']);
 

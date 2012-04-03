@@ -4,11 +4,9 @@
 	loadlib("buildings");
 
 	$bldg = buildings_get_random_building();
-
 dumper($bldg);
-exit;
-	$nearby = buildings_get_nearby_for_building($bldg);
 
+	$nearby = buildings_get_nearby_for_building($bldg);
 dumper($nearby);
 exit;
 	$GLOBALS['smarty']->assign_by_ref("building", $bldg);

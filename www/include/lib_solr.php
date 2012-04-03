@@ -29,7 +29,7 @@
 		$params['rows'] = $rows;
 		$params['start'] = $start;
 
-		$rsp = _solr_select($params);
+		$rsp = _solr_select($params, $more);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -126,7 +126,7 @@
 		# TO DO: pagination...
 		$params['facet.limit'] = -1;
 
-		$rsp = _solr_select($params);
+		$rsp = _solr_select($params, $more);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -160,7 +160,7 @@
 
 		$params['facet.range.other'] = 'all';
 
-		$rsp = _solr_select($params);
+		$rsp = _solr_select($params, $more);
 
 		if (! $rsp['ok']){
 			return $rsp;
@@ -200,7 +200,9 @@
 
 	function solr_add($docs, $more=array()){
 
-		$url = $GLOBALS['cfg']['solr_endpoint'] . "update/json";
+		$endpoint = (isset($more['solr_endpoint'])) ? $more['solr_endpoint'] : $GLOBALS['cfg']['solr_endpoint'];
+
+		$url = "{$endpoint}update/json";
 
 		$params = array(
 			'commit' => 'true',
@@ -237,11 +239,14 @@
 
 	# this is called by both solr_select and solr_facet
 
-	function _solr_select($params){
+	function _solr_select($params, $more=array()){
+
+		$endpoint = (isset($more['solr_endpoint'])) ? $more['solr_endpoint'] : $GLOBALS['cfg']['solr_endpoint'];
+
+		$url = "{$endpoint}select/";
 
 		$params['wt'] = 'json';
 
-		$url = $GLOBALS['cfg']['solr_endpoint'] . "select/";
 		$str_params = _solr_build_query($params, "stringify");
 
 		$http_rsp = http_post($url, $str_params);

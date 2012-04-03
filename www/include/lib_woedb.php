@@ -1,20 +1,20 @@
 <?php
 
-	loadlib("solr_woedb");
+	loadlib("solr");
 
 	#################################################################
 
 	function woedb_get_by_id($woeid, $more=array()){
 
-		$url = "";
+		$more = array(
+			'solr_endpoint' => $GLOBALS['cfg']['solr_endpoint_woedb'],
+		);
 
 		$args = array(
 			"q" => "woeid:{$woeid}",
 		);
 
-		$args = array_merge($more, $args);
-
-		$rsp = solr_woedb_select($url, $args);
+		$rsp = solr_select($url, $args, $more);
 		return solr_single($rsp);
 	}
 
@@ -31,6 +31,8 @@
 		$parent_woeid = $woe['parent_woeid'];
 
 		while ($parent_woeid){
+
+			# FIX ME...
 
 			$more = array(
 				'fl' => 'name,woeid,placetype,parent_woeid,iso'
