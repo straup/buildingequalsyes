@@ -3,12 +3,6 @@
 	# $Id$
 	#
 
-	# This file has been copied from the Citytracking fork of flamework.
-	# It has not been forked, or cloned or otherwise jiggery-poked, but
-	# copied: https://github.com/Citytracking/flamework (20101208/straup)
-
-	#################################################################
-
 	$GLOBALS['db_conns'] = array();
 
 	$GLOBALS['timings']['db_conns_count']	= 0;
@@ -24,16 +18,21 @@
 
 	#################################################################
 
-	#
-	# connect to the main cluster immediately so that we can show a
-	# downtime notice it's it's not available? you might not want to
-	# so this - depends on whether you can ever stand the main cluster
-	# being down.
-	#
+	function db_init(){
 
-	if ($GLOBALS['cfg']['db_main']['auto_connect']){
-		_db_connect('main');
+		#
+		# connect to the main cluster immediately so that we can show a
+		# downtime notice it's it's not available? you might not want to
+		# so this - depends on whether you can ever stand the main cluster
+		# being down.
+		#
+
+		if ($GLOBALS['cfg']['db_main']['auto_connect']){
+			_db_connect('main');
+		}
 	}
+
+	#################################################################
 
 	#
 	# These are just shortcuts to the real functions which allow
@@ -48,9 +47,6 @@
 
 	function db_insert($tbl, $hash){		return _db_insert($tbl, $hash, 'main'); }
 	function db_insert_users($k, $tbl, $hash){	return _db_insert($tbl, $hash, 'users', $k); }
-
-	function db_insert_many($tbl, $rows){		return _db_insert_many($tbl, $rows, 'main'); }
-	function db_insert_many_users($tbl, $rows){	return _db_insert_many($tbl, $rows, 'users', $k); }
 
 	function db_insert_dupe($tbl, $hash, $hash2){		return _db_insert_dupe($tbl, $hash, $hash2, 'main'); }
 	function db_insert_dupe_users($k, $tbl, $hash, $hash2){	return _db_insert_dupe($tbl, $hash, $hash2, 'users', $k); }
@@ -68,20 +64,7 @@
 	function db_write($sql){		return _db_write($sql, 'main'); }
 	function db_write_users($k, $sql){	return _db_write($sql, 'users', $k); }
 
-	function db_tickets_write($sql){
-
-		$k = null;
-
-		# aka, not running in poormans mode
-
-		if (is_array($GLOBALS['cfg']['db_tickets']['host'])){
-
-			$count = count(array_keys($GLOBALS['cfg']['db_tickets']['host']));
-			$k = ($count == 1) ? 1 : rand(1, $count);
-		}
-
-		return _db_write($sql, 'tickets', $k);
-	}
+	function db_tickets_write($sql){		return _db_write($sql, 'tickets'); }
 
 	#################################################################
 
@@ -99,14 +82,10 @@
 			$name = $name[$k];
 		}
 
-		if (is_array($host)){
-			shuffle($host);
-			$host = $host[0];
-		}
-
 		if (!$host){
 			log_fatal("no such cluster: ".$cluster);
 		}
+
 
 		#
 		# try to connect
@@ -119,9 +98,11 @@
 		if ($GLOBALS['db_conns'][$cluster_key]){
 
 			@mysql_select_db($name, $GLOBALS['db_conns'][$cluster_key]);
+			@mysql_query("SET character_set_results='utf8', character_set_client='utf8', character_set_connection='utf8', character_set_database='utf8', character_set_server='utf8'", $GLOBALS['db_conns'][$cluster_key]);
 		}
 
 		$end = microtime_ms();
+
 
 		#
 		# log
@@ -129,7 +110,8 @@
 
 		log_notice('db', "DB-$cluster_key: Connect", $end-$start);
 
-		if (!$GLOBALS['db_conns'][$cluster_key] || (auth_has_role('staff') && $GLOBALS['cfg']['admin_flags_no_db'])){
+		if (!$GLOBALS['db_conns'][$cluster_key] || $GLOBALS['cfg']['admin_flags_no_db']){
+
 			log_fatal("Connection to database cluster '$cluster_key' failed");
 		}
 
@@ -155,21 +137,17 @@
 			_db_connect($cluster, $k);
 		}
 
-		#
-		# Used to see what function called do_query
-		#
-		$backtrace = debug_backtrace();
-		array_shift($backtrace);
-		$caller = array_shift($backtrace);
+		$trace = _db_callstack();
+		$use_sql = _db_comment_query($sql, $trace);
 
 		$start = microtime_ms();
-		$result = @mysql_query($sql . " /* " . $caller . " */", $GLOBALS['db_conns'][$cluster_key]);
+		$result = @mysql_query($use_sql, $GLOBALS['db_conns'][$cluster_key]);
 		$end = microtime_ms();
 
 		$GLOBALS['timings']['db_queries_count']++;
 		$GLOBALS['timings']['db_queries_time'] += $end-$start;
 
-		log_notice('db', "DB-$cluster_key: $sql", $end-$start);
+		log_notice('db', "DB-$cluster_key: $sql ($trace)", $end-$start);
 
 
 		#
@@ -241,21 +219,6 @@
 		}
 
 		return _db_write("INSERT INTO $tbl (`".implode('`,`',$fields)."`) VALUES ('".implode("','",$hash)."') ON DUPLICATE KEY UPDATE ".implode(', ',$bits), $cluster, $shard);
-	}
-
-	#################################################################
-
-	function _db_insert_many($tbl, $rows, $cluster, $shard=null){
-
-		$fields = array_keys($rows[0]);
-		$values = array();
-
-		foreach ($rows as $row){
-
-			$values[] = "('" . implode("','", $row) . "')";
-		}
-
-		return _db_write("INSERT INTO $tbl (`".implode('`,`',$fields)."`) VALUES " . implode(",", $values), $cluster, $k);
 	}
 
 	#################################################################
@@ -374,13 +337,13 @@
 		$ret = _db_fetch($sql, $cluster, $k);
 
 		$ret['pagination'] = array(
-			'total_count' => (int)$total_count,
-			'page' => $page,
-			'per_page' => $per_page,
-			'page_count' => $page_count,
+			'total_count'	=> $total_count,
+			'page'		=> $page,
+			'per_page'	=> $per_page,
+			'page_count'	=> $page_count,
 		);
 		
-		if ($GLOBALS['cfg']['pagination_assign_smarty_variable']) {
+		if ($GLOBALS['cfg']['pagination_assign_smarty_variable']){
 			$GLOBALS['smarty']->assign('pagination', $ret['pagination']);
 			$GLOBALS['smarty']->register_function('pagination', 'smarty_function_pagination');
 		}
@@ -403,6 +366,54 @@
 			'affected_rows'	=> mysql_affected_rows($GLOBALS['db_conns'][$cluster_key]),
 			'insert_id'	=> mysql_insert_id($GLOBALS['db_conns'][$cluster_key]),
 		);
+	}
+
+	#################################################################
+
+	function _db_comment_query($sql, $trace){
+
+		$debug = $_SERVER['SCRIPT_NAME'].": ".$trace;
+		$debug = str_replace('*', '?', $debug); # just incase there is '*/' in the debug message
+
+		return "/* $debug */ $sql";
+	}
+
+	#################################################################
+
+	function _db_callstack(){
+
+		#
+		# get the backtrace, minus any functions that starts with db_ or _db_
+		#
+
+		$trace = debug_backtrace();
+
+		while (substr($trace[0]['function'], 0, 3) == 'db_' || substr($trace[0]['function'], 0, 4) == '_db_'){
+			array_shift($trace);
+		}
+
+
+		#
+		# full stack?
+		#
+
+		if ($GLOBALS['cfg']['db_full_callstack']){
+
+			$items = array();
+
+			foreach($trace as $t){
+				$items[] = $t['function'].'()';
+			}
+
+			return implode(' -> ', array_reverse($items));
+		}
+
+
+		#
+		# single
+		#
+
+		return $trace[0]['function'] ? $trace[0]['function'].'()' : '_global_';
 	}
 
 	#################################################################

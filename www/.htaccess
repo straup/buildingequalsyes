@@ -16,7 +16,7 @@ Deny from none
 
 FileETag none
 
-php_flag display_errors off
+php_flag display_errors on
 
 php_value magic_quotes_gpc 0
 php_value register_globals 0
