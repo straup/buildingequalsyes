@@ -8,7 +8,7 @@
 
 	if ($_format = get_str('format')){
 
-		if (in_array($_format, $GLOBALS['cfg']['api']['formats'])){
+		if (in_array($_format, $GLOBALS['cfg']['api_valid_formats'])){
 			$format = $_format;
 		}
 	}

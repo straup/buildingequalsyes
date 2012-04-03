@@ -1,12 +1,12 @@
 <?php
 
-	loadlib("solr");
+	loadlib("solr_woedb");
 
 	#################################################################
 
 	function woedb_get_by_id($woeid, $more=array()){
 
-		$url = "http://localhost:8983/solr/geoplanet/select";
+		$url = "";
 
 		$args = array(
 			"q" => "woeid:{$woeid}",
@@ -14,10 +14,8 @@
 
 		$args = array_merge($more, $args);
 
-		$rsp = solr_select($url, $args);
-
-		$row = $rsp['data']['response']['docs'][0];
-		return $row;
+		$rsp = solr_woedb_select($url, $args);
+		return solr_single($rsp);
 	}
 
 	#################################################################

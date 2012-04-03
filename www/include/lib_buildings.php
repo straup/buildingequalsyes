@@ -3,7 +3,8 @@
 	loadlib("woedb");
 	loadlib("base58");
 
-	# http://wiki.apache.org/solr/SimpleFacetParameters
+	loadlib("solr");
+	loadlib("solr_buildings");
 
 	#################################################################
 
@@ -190,6 +191,8 @@
 
 		return $q;
 	}
+
+	#################################################################
 
 	function buildings_get_for_woe(&$woe, $more=array()){
 
@@ -390,8 +393,8 @@
 			$args['rows'] = 0;
 		}
 
-		$url = 'http://localhost:8985/solr/buildings/select';
-		return solr_select($url, $args);
+		$rsp = solr_buildings_select($args);
+		return $rsp;
 	}
 
 	#################################################################
@@ -420,7 +423,7 @@
 
 	#################################################################
 
-	function _buildings_fetch_paginated(&$args, $more=array()){
+	function _buildings_fetch_paginated_old(&$args, $more=array()){
 
 		$page = (isset($more['page'])) ? max(1, $more['page']) : 1;
 		$per_page = isset($more['per_page']) ? max(1, $more['per_page']) : 10;
@@ -479,8 +482,11 @@
 
 		$rsp = _buildings_fetch($args);
 
-		$rows = _buildings_inflate_rows($rsp);
-		return $rows[0];
+		if ($bldg = solr_single($rsp)){
+			_buildings_inflate_row($bldg);
+		}
+
+		return $bldg;
 	}
 
 	#################################################################
@@ -489,11 +495,7 @@
 
 		$rows = array();
 
-		if (! is_array($rsp['data']['response']['docs'])){
-			return $rows;
-		}
-
-		foreach ($rsp['data']['response']['docs'] as $b){
+		foreach ($rsp['rows'] as $b){
 			_buildings_inflate_row($b);
 			$rows[] = $b;
 		}
@@ -503,7 +505,7 @@
 
 	#################################################################
 
-	function _buildings_inflate_row(&$row){
+	function _buildings_inflate_row($row){
 
 		# geo stuff
 		_buildings_inflate_geometries($row);

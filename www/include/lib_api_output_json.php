@@ -2,7 +2,7 @@
 
 	#################################################################
 
-	function api_output_ok($rsp, $more=array()){
+	function api_output_ok($rsp=array(), $more=array()){
 		api_output_send($rsp, $more);
 	}
 
@@ -23,6 +23,8 @@
 	#################################################################
 
 	function api_output_send($rsp, $more=array()){
+
+		$rsp['stat'] = (isset($more['is_error'])) ? 'error' : 'ok';
 
 		$json = json_encode($rsp);
 
