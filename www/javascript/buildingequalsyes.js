@@ -51,12 +51,12 @@ function bldg_modestmap(parent){
 		parent = 'map';
 	}
 
-	var template = 'http://woe.spum.org/t/dithering/{Z}/{X}/{Y}.png';
+	var dither_template = 'http://woe.spum.org/t/dithering/{Z}/{X}/{Y}.png';
+	var dither_layer = new MM.TemplatedLayer(dither_template);
 
-	var provider = new com.modestmaps.TemplatedMapProvider(template);
-	provider.setZoomRange(1, 18);
+	var map = new MM.Map(parent, dither_layer);
 
-	var map = new com.modestmaps.Map(parent, provider);
+	map.setZoomRange(1, 18);
 	return map;
 }
 
@@ -72,7 +72,7 @@ function bldg_map_building_with_nearby(bldg, nearby){
 
 	for (var i=0; i < points; i++){
 		var c = coords[i];
-		var p = new com.modestmaps.Location(c[1], c[0]);
+		var p = new MM.Location(c[1], c[0]);
 		locations.push(p);
 	}
 
@@ -91,7 +91,7 @@ function bldg_map_building_with_nearby(bldg, nearby){
 
 		for (var j=0; j < count_coords; j++){
 			var c = coords[j];
-			var p = new com.modestmaps.Location(c[1], c[0]);
+			var p = new MM.Location(c[1], c[0]);
 			locations.push(p);
 		}
 	}
@@ -132,7 +132,7 @@ function bldg_map_buildings(bldgs, centroid){
 
 		for (var j=0; j < count_coords; j++){
 			var c = coords[j];
-			var p = new com.modestmaps.Location(c[1], c[0]);
+			var p = new MM.Location(c[1], c[0]);
 			locations.push(p);
 		}
 

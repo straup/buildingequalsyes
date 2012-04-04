@@ -8,7 +8,7 @@
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/raphael-1.5.2.min.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/array_merge.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/htmlspecialchars.js"></script>
-		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.min.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps-1.0b.min.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.markers.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/buildingequalsyes.js"></script>
 
