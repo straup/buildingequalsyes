@@ -53,9 +53,9 @@
 				"class": "TileStache.Goodies.Providers.Composite:Provider",
 				"kwargs": {
 					"stack": [
-						{"src": "dithered", "zoom": "15-18"},
+						{"src": "dithered"},
 						{"src": "buildings", "zoom": "15-18"},
-						{"src": "buildings-outline"}
+						{"src": "buildings-outline", "zoom": "15-18"}
 					]
 				}
 				}
