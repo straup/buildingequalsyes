@@ -178,8 +178,9 @@
 
 		$params = array(
 			"q" => $q,
-			"d" => 5000,
 		);
+
+		$more['d'] = 5000;
 
 		return _buildings_fetch_nearby($woe['latitude'], $woe['longitude'], $params, $more);
 	}

@@ -38,6 +38,7 @@
 	}
 
 	$buildings = buildings_get_for_woe($woe, $more);
+
 	$GLOBALS['smarty']->assign_by_ref("buildings", $buildings['rows']);
 
 	if ((count($buildings)) && (! $tag)){
