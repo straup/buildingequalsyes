@@ -35,15 +35,11 @@
 	$GLOBALS['smarty']->assign("lat", $lat);
 	$GLOBALS['smarty']->assign("lon", $lon);
 
-	$args = array(
-		"pt" => "{$lat},{$lon}",
-	);
-
 	$more = array(
 		"page" => get_int32("page"),
 	);
 
-	$buildings = buildings_get_nearby($args, $more);
+	$buildings = buildings_get_nearby($lat, $lon, $more);
 	$GLOBALS['smarty']->assign_by_ref("buildings", $buildings['rows']);
 
 	$enc_ll = htmlspecialchars($ll);

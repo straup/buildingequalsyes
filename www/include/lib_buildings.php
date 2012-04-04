@@ -4,6 +4,7 @@
 	loadlib("base58");
 
 	loadlib("solr");
+	loadlib("solr_machinetags");
 
 	#################################################################
 
@@ -64,33 +65,23 @@
 
 		list($lat, $lon) = explode(",", $building['centroid'], 2);
 
-		$more['sfield'] = 'centroid';
-
-		$rsp = solr_select_nearby($lat, $lon, $args, $more);
-
-		if ($rsp['ok']){
-			$rows = _buildings_inflate_rows($rsp);
-			$rsp['rows'] = $rows;
-		}
-
-		return $rsp;
+		return _buildings_fetch_nearby($lat, $lon, $args);
 	}
 
 	#################################################################
 
-	function buildings_get_nearby($lat, $lon, $args, $more=array()){
+	function buildings_get_nearby($lat, $lon, $more=array()){
 
-		$defaults = array(
+		$args = array(
 			"q" => "*:*",
 			"d" => 1,
 		);
 
-		$args = array_merge($defaults, $args);
-
-		return solr_select_nearby($lat, $lon, $args);
+		return _buildings_fetch_nearby($lat, $lon, $args);
 	}
 
 	#################################################################
+
 
 	function buildings_get_tags_for_woe(&$woe, $more=array()){
 
@@ -133,7 +124,7 @@
 			$parts = array();
 
 			foreach (explode("/", $f) as $p){
-				$parts[] = _buildings_remove_lazy8s($p);
+				$parts[] = solr_machinetags_remove_lazy8s($p);
 			}
 
 			$count_parts = count($parts);
@@ -167,7 +158,7 @@
 	function _buildings_get_for_woe_query(&$woe){
 
 		$woeid = $woe['woeid'];
-		$woeid_tags = _buildings_add_lazy8s($woeid);
+		$woeid_tags = solr_machinetags_add_lazy8s($woeid);
 
 		# why 3500? because it seems to work for canada...
 		# (20110509/asc)
@@ -191,18 +182,17 @@
 				'q' => "($q) AND ({$tag_q})",
 			);
 
-			return _buildings_fetch_paginated($args, $more);
+			return _buildings_fetch($args, $more);
 		}
 
 		# search nearby...
 
 		$args = array(
 			"q" => $q,
-			"pt" => "{$woe['latitude']},{$woe['longitude']}",
 			"d" => 5000,
 		);
 
-		return buildings_get_nearby($args, $more);
+		return _buildings_fetch_nearby($woe['latitude'], $woe['longitude'], $args, $more);
 	}
 
 	#################################################################
@@ -213,7 +203,7 @@
 			"q" => "nodes:{$nodeid}",
 		);
 
-		return _buildings_fetch_paginated($args, $more);
+		return _buildings_fetch($args, $more);
 	}
 
 	#################################################################
@@ -230,18 +220,18 @@
 
 		if ($parts['namespace'] == 'osm'){
 
-			$k = _buildings_add_lazy8s($parts['predicate']);
-			$v = _buildings_add_lazy8s($parts['value']);
+			$k = solr_machinetags_add_lazy8s($parts['predicate']);
+			$v = solr_machinetags_add_lazy8s($parts['value']);
 		}
 
 		else {
 
 			$k = implode("/", array(
- 				_buildings_add_lazy8s($parts['namespace']),
- 				_buildings_add_lazy8s($parts['predicate']),
+ 				solr_machinetags_add_lazy8s($parts['namespace']),
+ 				solr_machinetags_add_lazy8s($parts['predicate']),
 			));
 
-			$v = _buildings_add_lazy8s($parts['value']);
+			$v = solr_machinetags_add_lazy8s($parts['value']);
 		}
 
 		#
@@ -255,7 +245,7 @@
 
 		for ($i=0; $i < $count; $i++){
 
-			$v = _buildings_add_lazy8s($values[$i]);
+			$v = solr_machinetags_add_lazy8s($values[$i]);
 
 			if ($count == 1){
 				$q = "tags:*/{$v}";
@@ -297,30 +287,29 @@
 			"q" => $q,
 		);
 
-		return _buildings_fetch_paginated($args, $more);
+		return _buildings_fetch($args, $more);
 	}
 
 	#################################################################
 
 	function buildings_get_places_for_tag($tag, $more=array()){
 
-		$more['donot_inflate'] = 1;
-		$more['donot_assign_pagination'] = 1;
+		$q = _buildings_get_for_tag_query($tag);
 
-		$more['facet'] = array(
-			"facet" => "on",
+		$params = array(
 			"facet.field" => "tags",
 			"facet.prefix" => "woe/locality",
-			"facet.mincount" => 1,
 		);
 
-		$rsp = buildings_get_for_tag($tag, $more);
+		$rsp = solr_facet($tag, $more);
 
 		if (! $rsp['ok']){
 			return;
 		}
 
 		$places = array();
+
+		# FIX ME: ...
 
 		$fields = $rsp['data']['facet_counts']['facet_fields']['tags'];
 
@@ -332,7 +321,7 @@
 				continue;
 			}
 
-			$woeid = _buildings_remove_lazy8s($m[1]);
+			$woeid = solr_machinetags_remove_lazy8s($m[1]);
 			$count = $fields[$i + 1];
 
 			$loc = woedb_get_by_id($woeid);
@@ -360,50 +349,23 @@
 
 	function buildings_search($q, $more=array()){
 
-		$q = _buildings_add_lazy8s($q);
+		$q = solr_machinetags_add_lazy8s($q);
 
 		$args = array(
 			"q" => "name:{$q} OR tags:*{$q}*",
 		);
 
-		return _buildings_fetch_paginated($args, $more);
+		return _buildings_fetch($args, $more);
 	}
 
 	#################################################################
 
 	function _buildings_fetch(&$args, $more=array()){
 
-		if (is_array($more['facet'])){
-			$args = array_merge($args, $more['facet']);
-			$args['rows'] = 0;
-		}
-
 		$rsp = solr_select($args);
+		_buildings_inflate_rows($rsp);
+
 		return $rsp;
-	}
-
-	#################################################################
-
-	function _buildings_sort_by_ip($ip=null){
-
-		if (! $ip){
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
-
-		loadlib("hostip");
-		$rsp = hostip_lookup($ip);
-
-		if (! $rsp['ok']){
-			return;
-		}
-
-		return array(
-			"fq" => "{!geofilt}",
-			"sfield" => "centroid",
-			"pt" => "{$rsp['latitude']},{$rsp['longitude']}",
-			"d" => 50000,
-			"sort" => "geodist() asc, score desc",
-		);
 	}
 
 	#################################################################
@@ -411,17 +373,28 @@
 	function _buildings_fetch_one($args){
 
 		$rsp = _buildings_fetch($args);
-
-		if ($bldg = solr_single($rsp)){
-			_buildings_inflate_row($bldg);
-		}
-
-		return $bldg;
+		return solr_single($rsp);
 	}
 
 	#################################################################
 
-	function _buildings_inflate_rows($rsp){
+	function _buildings_fetch_nearby($lat, $lon, $args, $more=array()){
+
+		$more['sfield'] = 'centroid';
+
+		$rsp = solr_select_nearby($lat, $lon, $args, $more);
+		_buildings_inflate_rows($rsp);
+
+		return $rsp;
+	}
+
+	#################################################################
+
+	function _buildings_inflate_rows(&$rsp){
+
+		if (! $rsp['ok']){
+			return;
+		}
 
 		$rows = array();
 
@@ -430,12 +403,14 @@
 			$rows[] = $b;
 		}
 
-		return $rows;
+		$rsp['rows'] = $rows;
+
+		# note the pass-by-ref
 	}
 
 	#################################################################
 
-	function _buildings_inflate_row($row){
+	function _buildings_inflate_row(&$row){
 
 		# geo stuff
 		_buildings_inflate_geometries($row);
@@ -562,7 +537,7 @@
 		$count = count($parts);
 
 		for ($i=0; $i < $count; $i++){
-			$parts[$i] = _buildings_add_lazy8s($parts[$i]);
+			$parts[$i] = solr_machinetags_add_lazy8s($parts[$i]);
 		}
 
 		return implode("/", $parts);
@@ -583,7 +558,7 @@
 		}
 			
 		for ($i=0; $i < $count; $i++){
-			$parts[$i] = _buildings_remove_lazy8s($parts[$i]);
+			$parts[$i] = solr_machinetags_remove_lazy8s($parts[$i]);
 		}
 
 		$tag = array(
@@ -597,24 +572,29 @@
 
 	#################################################################
 
-	function _buildings_add_lazy8s($str){
-		$str = preg_replace("/8/", "88", $str);
-		$str = preg_replace("/:/", "8c", $str);
-		$str = preg_replace("/\//", "8s", $str);
-		return $str;
+	# old and wtf?
+
+	function _buildings_sort_by_ip($ip=null){
+
+		if (! $ip){
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+
+		loadlib("hostip");
+		$rsp = hostip_lookup($ip);
+
+		if (! $rsp['ok']){
+			return;
+		}
+
+		return array(
+			"fq" => "{!geofilt}",
+			"sfield" => "centroid",
+			"pt" => "{$rsp['latitude']},{$rsp['longitude']}",
+			"d" => 50000,
+			"sort" => "geodist() asc, score desc",
+		);
 	}
 
-	function _buildings_remove_lazy8s($str){
-
-	# http://buildingequalsyes.spum.org/id/2150118100
-
-		$str = preg_replace("/8s/", "/", $str);
-		$str = preg_replace("/8c/", ":", $str);
-		$str = preg_replace("/88/", "8", $str);
-
-		return $str;
-	}
-
-	#################################################################
 
 ?>
