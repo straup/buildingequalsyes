@@ -85,35 +85,26 @@
 
 	function buildings_get_tags_for_woe(&$woe, $more=array()){
 
-		$more['donot_inflate'] = 1;
-		$more['donot_assign_pagination'] = 1;
+		$q = _buildings_get_for_woe_query($woe);
 
-		$more['facet'] = array(
-			"facet" => "on",
-			"facet.field" => "tags",
-			"facet.mincount" => 1,
+		$params = array(
+			'q' => $q,
+			'facet.field' => 'tags',
 
 			# why doesn't this work...
-			"facet.query" => "-tags:woe/*",
+			'facet.query' => '-tags:woe/*',
 		);
 
-		$rsp = buildings_get_for_woe($woe, $more);
-
-		$fields = $rsp['data']['facet_counts']['facet_fields']['tags'];
-
+		$rsp = solr_facet($params, $more);
 		$tags = array();
 
-		foreach (range(0, count($fields), 2) as $i){
+		foreach ($rsp['facets'] as $tag => $count){
 
-			$f = $fields[$i];
-
-			# see ntoe about facet.query above...
-
-			if (($f == 'woe') || (preg_match("/^woe\//", $f))){
+			if (($tag == 'woe') || (preg_match("/^woe\//", $tag))){
 				continue;
 			}
 
-			if (! $f){
+			if (! $tag){
 				continue;
 			}
 
@@ -123,7 +114,7 @@
 
 			$parts = array();
 
-			foreach (explode("/", $f) as $p){
+			foreach (explode("/", $tag) as $p){
 				$parts[] = solr_machinetags_remove_lazy8s($p);
 			}
 
@@ -140,8 +131,6 @@
 			else {
 				$tag = $parts[0];
 			}
-
-			$count = $fields[$i + 1];
 
 			$tags[$tag] = $count;
 
