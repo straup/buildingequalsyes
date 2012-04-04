@@ -42,7 +42,14 @@
 	$GLOBALS['smarty']->assign_by_ref("buildings", $buildings['rows']);
 
 	if ((count($buildings)) && (! $tag)){
-		$tags = buildings_get_tags_for_woe($woe);
+
+		$mincount = ($woe['placetype'] == 'Country') ? 50 : 1;
+
+		$tags_more = array(
+			'mincount' => $mincount,
+		);
+
+		$tags = buildings_get_tags_for_woe($woe, $tags_more);
 		$GLOBALS['smarty']->assign_by_ref("tags", $tags);
 	}
 
