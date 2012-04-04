@@ -54,13 +54,48 @@ function bldg_modestmap(parent){
 	var dither_template = 'http://woe.spum.org/t/dithering/{Z}/{X}/{Y}.png';
 	var dither_layer = new MM.TemplatedLayer(dither_template);
 
+	var outlines_template = 'http://woe.spum.org/t/outlines/{Z}/{X}/{Y}.png';
+	var outlines_layer = new MM.TemplatedLayer(outlines_template);
+
+	var outlines_callback = function(_map){
+
+		try {
+			if (_map.getZoom() < 15){
+
+				if (_map.layers.length > 1){
+					_map.removeLayer(outlines_layer);
+				}
+
+				return;
+			}
+
+			if (_map.layers.length > 1){
+				return;
+			}
+
+			_map.addLayer(outlines_layer);
+		}
+
+		catch (e){
+			console.log(e);
+		}
+	};
+
+	var outlines_callback_draw = function(_map){
+		outlines_callback(_map);
+		_map.draw();
+	};
+
 	var map = new MM.Map(parent, dither_layer);
+
+	map.addCallback('zoomed', outlines_callback);
+	map.addCallback('extentset', outlines_callback_draw);
 
 	map.setZoomRange(1, 18);
 	return map;
 }
 
-function bldg_map_building_with_nearby(bldg, nearby){
+function bldg_map_building_with_nearby(bldg, nearby, scroll){
 
 	var locations = new Array();
 

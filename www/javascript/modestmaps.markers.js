@@ -49,7 +49,7 @@ com.modestmaps.Markers.prototype.drawPoints = function(latlons, more){
 		'type': 'point',
 		'locations': locations,
 		'extent': extent,
-		'more': more,
+		'more': more
 	});
 
 	var drawn = this._actuallyDrawPoints(locations, extent, more);
@@ -66,7 +66,7 @@ com.modestmaps.Markers.prototype.drawLines = function(latlons, more){
 		'type': 'line',
 		'locations': locations,
 		'extent': extent,
-		'more': more,
+		'more': more
 	});
 
 	var drawn = this._actuallyDrawLines(locations, draw_extent, more);
@@ -83,7 +83,7 @@ com.modestmaps.Markers.prototype.drawPolygons = function(latlons, more){
 		'type': 'polygon',
 		'locations': locations,
 		'extent': extent,
-		'more': more,
+		'more': more
 	});
 
 	var drawn = this._actuallyDrawPolygons(locations, extent, more);
@@ -118,7 +118,7 @@ com.modestmaps.Markers.prototype.drawBoundingBoxes = function(bboxes, more){
 			[nw[0], nw[1]],
 			[ne[0], ne[1]],
 			[se[0], se[1]],
-			[sw[0], sw[1]],
+			[sw[0], sw[1]]
 		];
 
 		polygons.push(coords);

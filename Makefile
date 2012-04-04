@@ -16,3 +16,14 @@ secret:
 
 clean:
 	rm -f ./TODO.txt
+
+js:
+
+	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar \
+		--js www/javascript/array_merge.js \
+		--js www/javascript/htmlspecialchars.js \
+		> www/javascript/phpjs.min.js
+
+	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar \
+		--js www/javascript/modestmaps.markers.js \
+		> www/javascript/modestmaps.markers.min.js
