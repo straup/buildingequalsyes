@@ -26,4 +26,5 @@ js:
 
 	java -Xmx64m -jar lib/google-compiler/compiler-20100616.jar \
 		--js www/javascript/modestmaps.markers.js \
-		> www/javascript/modestmaps.markers.min.js
+		--js www/javascript/modestmaps.touch.js \
+		> www/javascript/modestmaps.bells-and-whistles.min.js

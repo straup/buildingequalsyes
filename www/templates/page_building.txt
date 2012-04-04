@@ -163,7 +163,6 @@ $(document).ready(function(){
 	var success = function(rsp){
 
 		rsp = JSON.parse(rsp);
-		console.log(rsp);
 
 		if ((rsp.stat != 'ok') || (rsp.photos.total == 0)){
 			return;
@@ -175,7 +174,6 @@ $(document).ready(function(){
 			var ph = rsp.photos.photo[i];
 			var th = ph['url_sq'];
 			var url = "http://www.flickr.com/photos/" + ph['owner'] + "/" + ph['id'];
-			console.log(th);
 
 			var html = "<a href='" + url + "' target='_flickr'>";
 			html += "<img src='" + th + "' height='75' width='75' />";

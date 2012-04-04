@@ -1,3 +1,5 @@
+var MM = com.modestmaps;
+
 function bldg_listview_pagination_hooks(){
 
 	$(document).keyup(function(e){
@@ -51,47 +53,21 @@ function bldg_modestmap(parent){
 		parent = 'map';
 	}
 
-	var dither_template = 'http://woe.spum.org/t/dithering/{Z}/{X}/{Y}.png';
-	var dither_layer = new MM.TemplatedLayer(dither_template);
+	var template = 'http://woe.spum.org/t/buildingequalsyes/{Z}/{X}/{Y}.png';
 
-	var outlines_template = 'http://woe.spum.org/t/outlines/{Z}/{X}/{Y}.png';
-	var outlines_layer = new MM.TemplatedLayer(outlines_template);
+	var dims = undefined;
+	var handlers = undefined;
 
-	var outlines_callback = function(_map){
+	if (document.ontouchmove !== undefined){
+		var touch = new MM.TouchHandler();
+		var handlers = new Array();
+		handlers.push(touch);
+	}
 
-		try {
-			if (_map.getZoom() < 15){
+	var provider = new MM.TemplatedMapProvider(template);
+	provider.setZoomRange(1, 18);
 
-				if (_map.layers.length > 1){
-					_map.removeLayer(outlines_layer);
-				}
-
-				return;
-			}
-
-			if (_map.layers.length > 1){
-				return;
-			}
-
-			_map.addLayer(outlines_layer);
-		}
-
-		catch (e){
-			console.log(e);
-		}
-	};
-
-	var outlines_callback_draw = function(_map){
-		outlines_callback(_map);
-		_map.draw();
-	};
-
-	var map = new MM.Map(parent, dither_layer);
-
-	map.addCallback('zoomed', outlines_callback);
-	map.addCallback('extentset', outlines_callback_draw);
-
-	map.setZoomRange(1, 18);
+	var map = new MM.Map(parent, provider, dims, handlers);
 	return map;
 }
 

@@ -7,8 +7,8 @@
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/raphael-1.5.2.min.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/phpjs.min.js"></script>
-		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps-1.0b.min.js"></script>
-		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.markers.min.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps-0.16.min.js"></script>
+		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/modestmaps.bells-and-whistles.min.js"></script>
 		<script type="text/javascript" src="{$cfg.abs_root_url}javascript/buildingequalsyes.js"></script>
 
 {if $building}
