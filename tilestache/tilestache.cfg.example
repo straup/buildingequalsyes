@@ -26,6 +26,7 @@
 		"buildings": {
 			"provider": {
 				"class": "mapequalsyes.footprint.Provider",
+				"bounds": { "low": 15, "high": 18 },
 				"kwargs": {
 					"type": "way",
 					"query": "[building=*]",
@@ -37,6 +38,7 @@
 		"buildings-outline": {
 			"provider": {
 				"class": "mapequalsyes.footprint.Provider",
+				"bounds": { "low": 15, "high": 18 },
 				"kwargs": {
 					"type": "way",
 					"query": "[building=*]",
@@ -51,8 +53,8 @@
 				"class": "TileStache.Goodies.Providers.Composite:Provider",
 				"kwargs": {
 					"stack": [
-						{"src": "dithered"},
-						{"src": "buildings"},
+						{"src": "dithered", "zoom": "15-18"},
+						{"src": "buildings", "zoom": "15-18"},
 						{"src": "buildings-outline"}
 					]
 				}
