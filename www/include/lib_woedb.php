@@ -6,15 +6,13 @@
 
 	function woedb_get_by_id($woeid, $more=array()){
 
-		$more = array(
-			'solr_endpoint' => $GLOBALS['cfg']['solr_endpoint_woedb'],
-		);
+		$more['solr_endpoint'] = $GLOBALS['cfg']['solr_endpoint_woedb'];
 
-		$args = array(
+		$params = array(
 			"q" => "woeid:{$woeid}",
 		);
 
-		$rsp = solr_select($url, $args, $more);
+		$rsp = solr_select($params, $more);
 		return solr_single($rsp);
 	}
 

@@ -1,9 +1,3 @@
-{if 0}
-{* sudo make this work... *}
-{capture assign="whereami"}
-{if $building.woe}in the {include file="inc_woe_placetype.txt _woe=$building.woe} of {include file="inc_woe_name.txt" _woe=$building.woe}{/if}
-{/capture}
-{/if}
 {capture assign="locality"}{$building.tags.woe.locality}{/capture}
 {capture assign="page_title"} {$building.id} {if $building.name} | {$building.name}{/if}{if $locality} | {$building.woe.$locality.name|escape}{/if}{/capture}
 {include file="inc_head.txt"}
