@@ -178,21 +178,21 @@
 
 			$tag_q = _buildings_get_for_tag_query($more['tag']);
 
-			$args = array(
+			$params = array(
 				'q' => "($q) AND ({$tag_q})",
 			);
 
-			return _buildings_fetch($args, $more);
+			return _buildings_fetch($params, $more);
 		}
 
 		# search nearby...
 
-		$args = array(
+		$params = array(
 			"q" => $q,
 			"d" => 5000,
 		);
 
-		return _buildings_fetch_nearby($woe['latitude'], $woe['longitude'], $args, $more);
+		return _buildings_fetch_nearby($woe['latitude'], $woe['longitude'], $params, $more);
 	}
 
 	#################################################################
@@ -365,6 +365,7 @@
 		$rsp = solr_select($args);
 		_buildings_inflate_rows($rsp);
 
+		$GLOBALS['smarty']->assign('pagination', $rsp['pagination']);
 		return $rsp;
 	}
 
@@ -385,6 +386,7 @@
 		$rsp = solr_select_nearby($lat, $lon, $args, $more);
 		_buildings_inflate_rows($rsp);
 
+		$GLOBALS['smarty']->assign('pagination', $rsp['pagination']);
 		return $rsp;
 	}
 
