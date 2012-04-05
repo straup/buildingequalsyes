@@ -7,6 +7,7 @@
 	function woedb_get_by_id($woeid, $more=array()){
 
 		$more['solr_endpoint'] = $GLOBALS['cfg']['solr_endpoint_woedb'];
+		$more['donot_assign_smarty_pagination'] = 1;
 
 		$params = array(
 			"q" => "woeid:{$woeid}",

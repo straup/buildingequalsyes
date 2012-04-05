@@ -54,7 +54,7 @@
 
 		# TO DO: put this someplace common (like not here or lib_db)
 
-		if ($GLOBALS['cfg']['pagination_assign_smarty_variable']) {
+		if (($GLOBALS['cfg']['pagination_assign_smarty_variable']) && (! isset($more['donot_assign_smarty_pagination']))){
 			$GLOBALS['smarty']->assign('pagination', $rsp['pagination']);
 			$GLOBALS['smarty']->register_function('pagination', 'smarty_function_pagination');
 		}

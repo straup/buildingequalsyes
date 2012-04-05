@@ -352,9 +352,11 @@
 
 	#################################################################
 
-	function _buildings_fetch_one($args){
+	function _buildings_fetch_one($params, $more=array()){
 
-		$rsp = _buildings_fetch($args);
+		$more['donot_assign_smarty_pagination'] = 1;
+
+		$rsp = _buildings_fetch($params, $more);
 		return solr_single($rsp);
 	}
 
