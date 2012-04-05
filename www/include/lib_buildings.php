@@ -287,32 +287,21 @@
 		$q = _buildings_get_for_tag_query($tag);
 
 		$params = array(
-			"facet.field" => "tags",
-			"facet.prefix" => "woe/locality",
+			'q' => $q,
+			'facet.field' => 'tags',
+ 			'facet.prefix' => 'woe/locality',
 		);
 
-		$rsp = solr_facet($tag, $more);
-
-		if (! $rsp['ok']){
-			return;
-		}
-
+		$rsp = solr_facet($params, $more);
 		$places = array();
 
-		# FIX ME: ...
-
-		$fields = $rsp['data']['facet_counts']['facet_fields']['tags'];
-
-		foreach (range(0, count($fields), 2) as $i){
-
-			$f = $fields[$i];
+		foreach ($rsp['facets'] as $f => $count){
 
 			if (! preg_match("/^woe\/(?:[a-z]+)\/(\d+)$/", $f, $m)){
 				continue;
 			}
 
 			$woeid = solr_machinetags_remove_lazy8s($m[1]);
-			$count = $fields[$i + 1];
 
 			$loc = woedb_get_by_id($woeid);
 
