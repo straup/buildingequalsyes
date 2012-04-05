@@ -341,7 +341,9 @@
 
 	function _buildings_fetch(&$args, $more=array()){
 
-		$rsp = solr_select($args);
+		$more['http_timeout'] = $GLOBALS['cfg']['http_timeout_solr'];
+
+		$rsp = solr_select($args, $more);
 		_buildings_inflate_rows($rsp);
 
 		$GLOBALS['smarty']->assign('pagination', $rsp['pagination']);
@@ -360,6 +362,7 @@
 
 	function _buildings_fetch_nearby($lat, $lon, $args, $more=array()){
 
+		$more['http_timeout'] = $GLOBALS['cfg']['http_timeout_solr'];
 		$more['sfield'] = 'centroid';
 
 		$rsp = solr_select_nearby($lat, $lon, $args, $more);
