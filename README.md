@@ -30,3 +30,9 @@ The search-y bits (Solr)
 
 The map tiles (TileStache)
 --
+
+Map tiles are generated and served using [TileStache](). I run TileStache under
+the [gunicorn]() server framework-thing-y because I like it and its stable but
+there are others.
+
+See the [tilestache/README.md]() document for details.
