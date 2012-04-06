@@ -20,7 +20,7 @@
 	<body>
 
 		<div id="container">
-			<div id="map"></div>
+			<div id="map"{if $smarty.get.debug} style="display:none;"{/if}></div>
 		</div>
 
 		<div id="details">

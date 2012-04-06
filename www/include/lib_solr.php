@@ -249,7 +249,14 @@
 
 		$str_params = _solr_build_query($params, "stringify");
 
-		$http_rsp = http_post($url, $str_params);
+		$http_headers = array();
+		$http_more = array();
+
+		if (isset($more['http_timeout'])){
+			$http_more['http_timeout'] = $more['http_timeout'];
+		}
+
+		$http_rsp = http_post($url, $str_params, $http_headers, $http_more);
 		return _solr_parse_response($http_rsp);
 	}
 

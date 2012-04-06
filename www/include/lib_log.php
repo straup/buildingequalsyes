@@ -117,7 +117,7 @@
 	function _log_handler_html($level, $msg, $more = array()){
 
 		if (! auth_has_role('staff')){
-			return;
+			# return;
 		}
 
 		# only shows notices if we asked to see them

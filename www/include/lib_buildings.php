@@ -212,7 +212,27 @@
 
 	function buildings_get_for_woe(&$woe, $more=array()){
 
-		# TO DO: cache me
+		# IMPORTANT: see how we are caching paginated
+		# results? this is predicated on the assumption
+		# that the underlying datastore (solr) does not
+		# change frequently.
+		#
+		# See also: $GLOBALS['cfg']['cache_prefix']
+
+		$cache_key = "buildings_woe_{$woe['woeid']}";
+
+		if (isset($more['tag'])){
+			$cache_key .= "_t{$more['tag']}";
+		}
+
+		$cache_pg = ($more['page']) ? $more['page'] : 1;
+		$cache_key .= "_p{$cache_pg}";
+
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			# return $cache['data'];
+		}
 
 		$q = _buildings_get_for_woe_query($woe);
 
@@ -221,21 +241,38 @@
 			$tag_q = _buildings_get_for_tag_query($more['tag']);
 
 			$params = array(
-				'q' => "($q) AND ({$tag_q})",
+				'q' => "({$q}) AND ({$tag_q})",
 			);
 
-			return _buildings_fetch($params, $more);
+			$rsp = _buildings_fetch($params, $more);
 		}
 
-		# search nearby...
+		# this shouldn't happen but does (20120405/straup)
 
-		$params = array(
-			"q" => $q,
-		);
+		else if ((! isset($woe['latitude'])) || (! isset($woe['longitude']))){
 
-		$more['d'] = 5000;
+			$params = array(
+				'q' => $q,
+			);
 
-		return _buildings_fetch_nearby($woe['latitude'], $woe['longitude'], $params, $more);
+			$rsp = _buildings_fetch($params, $more);
+		}
+
+		else {
+
+			$params = array(
+				"q" => $q,
+			);
+
+			$more['d'] = 5000;
+			$rsp = _buildings_fetch_nearby($woe['latitude'], $woe['longitude'], $params, $more);
+		}
+
+		if ($rsp['ok']){
+			cache_set($cache_key, $rsp, "cache locally");
+		}
+
+		return $rsp;
 	}
 
 	#################################################################
@@ -253,7 +290,7 @@
 			"q" => "nodes:{$nodeid}",
 		);
 
-		$more['donot_assign_smarty_pagination'] = 1;
+		# $more['donot_assign_smarty_pagination'] = 1;
 
 		$rsp = _buildings_fetch($args, $more);
 

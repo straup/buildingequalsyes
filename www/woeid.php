@@ -29,17 +29,26 @@
 	$GLOBALS['smarty']->assign_by_ref("woe", $woe);
 	$GLOBALS['smarty']->assign_by_ref("hierarchy", $hierarchy);
 
-	$more = array(
-		'page' => get_int32("page"),
-	);
+	$more = array();
+
+	if ($page = get_int32("page")){
+		$more['page'] = $page;
+	}
 
 	if ($tag = get_str('tag')){
 		$more['tag'] = $tag;
 	}
 
-	$buildings = buildings_get_for_woe($woe, $more);
+	$rsp = buildings_get_for_woe($woe, $more);
 
-	$GLOBALS['smarty']->assign_by_ref("buildings", $buildings['rows']);
+	/*
+	if (! $rsp['ok']){
+		dumper($rsp);
+		exit();
+	}
+	*/
+
+	$GLOBALS['smarty']->assign_by_ref("buildings", $rsp['rows']);
 
 	if ((count($buildings)) && (! $tag)){
 
