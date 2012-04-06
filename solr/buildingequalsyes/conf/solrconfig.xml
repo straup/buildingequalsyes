@@ -32,7 +32,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
-  <dataDir>${solr.solr.cores}/solr.core.buildingequalsyes/data</dataDir>
+  <dataDir>${solr.solr.cores}/buildingequalsyes/data</dataDir>
 
 
   <!-- The DirectoryFactory to use for indexes.

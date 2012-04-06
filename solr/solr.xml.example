@@ -3,6 +3,6 @@
 <solr persistent="false">
 
   <cores adminPath="/admin/cores">
-    <core name="buildingequalsyes" instanceDir="${solr.home}/buildingequalyes" />
+    <core name="buildingequalsyes" instanceDir="${solr.solr.home}/buildingequalsyes" />
   </cores>
 </solr>
