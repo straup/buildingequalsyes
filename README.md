@@ -1,6 +1,16 @@
 building=yes
 ==
 
+Four pieces:
+
+* The raw data and the import process
+
+* The datastore
+
+* The website / application itself
+
+* The map tiles
+
 Importing the data
 --
 
@@ -23,10 +33,22 @@ Finally, you import all the data in to Solr:
 The website (Apache + PHP + MySQL)
 --
 
-The website is built on top of [Flamework]().
+The website is built on top of [Flamework](). That means the core is nothing
+more than a vanilla Apache + PHP (+ MySQL) application that can be run out of a
+user's home directory or a top-level domain.
+
+As of this writing the MySQL piece is entirely optional since it is only used
+for account management and editing buildings via OpenStreetMap neither of which
+are enabled (or stable yet).
 
 The search-y bits (Solr)
 --
+
+buildignequalsyes uses the [Solr]() document index as its primary data
+store. That means the PHP code (above) needs to be able to connect to the
+designated Solr port, typically on localhost (read: the same machine).
+
+See the [solr/README.md]() document for details.
 
 The map tiles (TileStache)
 --
