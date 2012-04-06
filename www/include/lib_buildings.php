@@ -15,11 +15,24 @@
 
 	function buildings_get_by_id($id){
 
+		$cache_key = "building_id_{$id}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$args = array(
 			"q" => "id:{$id}",
 		);
 
-		return _buildings_fetch_one($args);
+		$bldg = _buildings_fetch_one($args);
+
+		if ($bldg){
+			cache_set($cache_key, $bldg, "cache locally");
+		}
+
+		return $bldg;
 	}
 
 	#################################################################
@@ -34,11 +47,24 @@
 
 	function buildings_get_by_wayid($wayid){
 
+		$cache_key = "building_way_{$wayid}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$args = array(
 			"q" => "way_id:{$wayid}",
 		);
 
-		return _buildings_fetch_one($args);
+		$bldg = _buildings_fetch_one($args);
+
+		if ($bldg){
+			cache_set($cache_key, $bldg, "cache locally");
+		}
+
+		return $bldg;
 	}
 
 	#################################################################
@@ -48,16 +74,19 @@
 		$offset = rand(0, $GLOBALS['buildings_total_count']);
 		$id = ($GLOBALS['buildings_last_woeid'] + 1) + $offset;
 
-		$args = array(
-			"q" => "id:{$id}",
-		);
-
-		return _buildings_fetch_one($args);
+		return buildings_get_by_id($id);
 	}
 
 	#################################################################
 
 	function buildings_get_nearby_for_building($building, $more=array()){
+
+		$cache_key = "buildings_nearby_{$building['id']}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
 
 		$args = array(
 			"q" => "NOT id:{$building['id']}",
@@ -65,12 +94,20 @@
 
 		list($lat, $lon) = explode(",", $building['centroid'], 2);
 
-		return _buildings_fetch_nearby($lat, $lon, $args);
+		$rsp = _buildings_fetch_nearby($lat, $lon, $args);
+
+		if ($rsp['ok']){
+			cache_set($cache_key, $rsp, "cache locally");
+		}
+
+		return $rsp;
 	}
 
 	#################################################################
 
 	function buildings_get_nearby($lat, $lon, $more=array()){
+
+		# TO DO: cache me...
 
 		$args = array(
 			"q" => "*:*",
@@ -85,6 +122,13 @@
 
 	function buildings_get_tags_for_woe(&$woe, $more=array()){
 
+		$cache_key = "buildings_tags_{$woe['woeid']}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$q = _buildings_get_for_woe_query($woe);
 
 		$params = array(
@@ -96,6 +140,11 @@
 		);
 
 		$rsp = solr_facet($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
 		$tags = array();
 
 		foreach ($rsp['facets'] as $tag => $count){
@@ -139,6 +188,8 @@
 			}
 		}
 
+		cache_set($cache_key, $tags, "cache locally");
+
 		return $tags;
 	}
 
@@ -160,6 +211,8 @@
 	#################################################################
 
 	function buildings_get_for_woe(&$woe, $more=array()){
+
+		# TO DO: cache me
 
 		$q = _buildings_get_for_woe_query($woe);
 
@@ -189,11 +242,26 @@
 
 	function buildings_get_for_nodeid($nodeid, $more=array()){
 
+		$cache_key = "building_node_{$nodeid}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$args = array(
 			"q" => "nodes:{$nodeid}",
 		);
 
-		return _buildings_fetch($args, $more);
+		$more['donot_assign_smarty_pagination'] = 1;
+
+		$rsp = _buildings_fetch($args, $more);
+
+		if ($rsp['ok']){
+			cache_set($cache_key, $rsp, "cache locally");
+		}
+
+		return $rsp;
 	}
 
 	#################################################################
@@ -265,6 +333,8 @@
 
 	function buildings_get_for_tag($tag, $more=array()){
 
+		# TO DO: cache me...
+
 		$q = _buildings_get_for_tag_query($tag, $more);
 
 		if (isset($more['woe'])){
@@ -284,6 +354,13 @@
 
 	function buildings_get_places_for_tag($tag, $more=array()){
 
+		$cache_key = "places_tag_{$tag}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
 		$q = _buildings_get_for_tag_query($tag);
 
 		$params = array(
@@ -293,6 +370,11 @@
 		);
 
 		$rsp = solr_facet($params, $more);
+
+		if (! $rsp['ok']){
+			return $rsp;
+		}
+
 		$places = array();
 
 		foreach ($rsp['facets'] as $f => $count){
@@ -320,6 +402,8 @@
 				break;
 			}
 		}
+
+		cache_set($cache_key, $places, "cache locally");
 
 		return $places;
 	}
