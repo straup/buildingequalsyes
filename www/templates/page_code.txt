@@ -1,0 +1,13 @@
+{include file="inc_head.txt"}
+
+<h2 class="title">the code-y bits</h2>
+
+<div id="bldg_intro">
+<p>All of the code for building=yes will be made available, under a BSD license,
+during the 2012 Museums and the Web conference.</p>
+
+</div>
+
+{include file="inc_random_building.txt"}
+
+{include file="inc_foot.txt"}

@@ -55,3 +55,5 @@ RewriteRule ^tags/([^/]+)(?:/w:([0-9]+))?(?:/page([0-9]+))?/?$			tags.php?tag=$1
 
 RewriteRule ^nearby/([^/]+)?(?:/page([0-9]+))?/?$		nearby.php?ll=$1&page=$2&%{QUERY_STRING} [L]
 RewriteRule ^search/([^/]+)?(?:/page([0-9]+))?/?$		search.php?q=$1&page=$2&%{QUERY_STRING} [L]
+
+RewriteRule ^code/?$						code.php?%{QUERY_STRING}	[L]
