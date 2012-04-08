@@ -253,3 +253,10 @@ footer {
     color:#444;
   }
 }
+
+.image500 {
+    margin-top:30px;
+    margin-bottom:40px;
+    border:1px dotted #ccc;
+    padding: 10px;
+}
