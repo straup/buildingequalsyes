@@ -39,6 +39,10 @@
 
 <p>Shortly, I hope to import them all back in to OpenStreetMap so that each building (specifically, each way tagged <code>building=yes</code>) will have one or more <code>woe:PLACETYPE=WOEID</code> tags associated with it.</p>
 
+<h3>Is this an open source project?</h3>
+
+<p><a href="{$cfg.abs_root_url}code/">Yes!</a></p>
+
 <h3>Can I get a copy of the data?</h3>
 
 <p>Yes.</p>

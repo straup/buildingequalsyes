@@ -3,8 +3,13 @@
 <h2 class="title">the code-y bits</h2>
 
 <div id="bldg_intro">
-<p>All of the code for building=yes will be made available, under a BSD license,
-during the 2012 Museums and the Web conference.</p>
+
+<p>All of the code the building=yes project is available under a <a
+href="https://github.com/straup/buildingequalsyes/blob/master/LICENSE">BSD
+license</a> on Github:</p>
+
+<p style="text-align:center;font-weight:100;"><a
+href="http://straup.github.com/buildingequalsyes/">http://straup.github.com/buildingequalsyes/</a></p>
 
 </div>
 
