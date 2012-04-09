@@ -1,7 +1,7 @@
 <div id="bldg_random">
 {capture assign="locality"}{$building.tags.woe.locality}{/capture}
 
-<p>⇦ What's that over there to the left? Why that's <strong><a href="{$cfg.abs_root_url}id/{$building.id|escape}/">{if $building.name}{$building.name|escape}{else}Untitled Building #{$building.id|escape}{/if}</a></strong>{if $nearby|@count} and others near it{/if}.{if $locality} It's in <a href="{$cfg.abs_root_url}woe/{$building.woe.$locality.woeid|escape}/">{$building.woe.$locality.fullname|escape}</a>.{/if}</p>
+<p>⇦ What's that over there to the left? Why that's <strong><a href="{$cfg.abs_root_url}id/{$building.id|escape}/">{if $building.name}{$building.name|escape}{else}Untitled Building #{$building.id|escape}{/if}</a></strong>{if $nearby|@count} and others near it{/if}.{if $locality} It's in <a href="{$cfg.abs_root_url}woe/{$building.woe.$locality.woeid|escape}/">{if $building.woe.$locality.fullname}{$building.woe.$locality.fullname|escape}{else}{$building.woe.$locality.name|escape}{/if}</a>.{/if}</p>
 
 <script type="text/javascript">
 var _bldg = '{$building.geometries.polygon|@json_encode}';
