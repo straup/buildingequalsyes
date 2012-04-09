@@ -1,0 +1,106 @@
+<?php
+
+	#############################################################
+
+	$GLOBALS['cfg'] = array();
+
+	# Things you might want to do quickly
+
+	$GLOBALS['cfg']['site_name'] = 'bldg.spum.org';
+
+	$GLOBALS['cfg']['disable_site'] = 0;
+	$GLOBALS['cfg']['show_show_header_message'] = 0;
+
+	# This is something you might need to change, specifically the
+	# port number (or hostname) of your Solr installation.
+
+	$GLOBALS['cfg']['solr_endpoint_buildings'] = 'http://localhost:9999/solr/buildings/';
+	$GLOBALS['cfg']['solr_endpoint'] = $GLOBALS['cfg']['solr_endpoint_buildings'];
+
+	# You do not have to run memcache with b=y but it is encouraged.
+	# If you don't (or can't) simply set the 'cache_remote_engine' to ''.
+
+	$GLOBALS['cfg']['cache_remote_engine'] = 'memcache';
+	$GLOBALS['cfg']['cache_prefix'] = '201204';
+	$GLOBALS['cfg']['memcache_host'] = 'localhost';
+	$GLOBALS['cfg']['memcache_port'] = '11211';
+
+	# Don't change this (for now). It may become a thing you can change in
+	# the future but for now it is not. See the comments at the top of
+	# www/include/lib_woedb.php for details.
+
+	$GLOBALS['cfg']['woedb_provider'] = 'yql';
+	$GLOBALS['cfg']['yql_api_endpoint'] = "http://query.yahooapis.com/v1/public/yql?q=";
+
+	# OSM as SSO provider and user accounts. Unless you're feeling adventurous
+	# you really don't need to worry about this. Because it doesn't work yet. Or
+	# rather the logging in with an OSM account works but none of the code for
+	# actually doing anything as a logged-in OSM user is complete. This is work
+	# that will probably start soon. (20120409/straup)
+
+	# See also: https://github.com/straup/flamework-osmapp
+
+	$GLOBALS['cfg']['enable_feature_signup'] = 0;
+	$GLOBALS['cfg']['enable_feature_signin'] = 0;
+	$GLOBALS['cfg']['enable_feature_account_delete'] = 0;
+	$GLOBALS['cfg']['enable_feature_password_retrieval'] = 0;
+
+	$GLOBALS['cfg']['osm_oauth_secret'] = '';
+	$GLOBALS['cfg']['osm_oauth_key'] = '';
+
+	$GLOBALS['cfg']['crypto_cookie_secret'] = '';
+	$GLOBALS['cfg']['crypto_password_secret'] = '';
+	$GLOBALS['cfg']['crypto_crumb_secret'] = '';
+	$GLOBALS['cfg']['crypto_oauth_cookie_secret'] = '';
+
+	$GLOBALS['cfg']['db_main'] = array(
+	 	'host'	=> 'localhost',
+	 	'name'	=> 'buildingequalsyes',
+	 	'user'	=> 'buildingequalsyes',
+	 	'pass'	=> '',
+	 	'auto_connect' => 0,
+	);
+
+	# Things you (probably) don't need to worry about
+
+	$GLOBALS['cfg']['enable_feature_api'] = 0;
+	$GLOBALS['cfg']['enable_feature_api_documentation'] = 0;
+
+	$GLOBALS['cfg']['db_enable_poormans_ticketing'] = 1;
+	$GLOBALS['cfg']['db_enable_poormans_federation'] = 1;
+
+	$GLOBALS['cfg']['smarty_template_dir'] = realpath(dirname(__FILE__) . '/../templates/');
+	$GLOBALS['cfg']['smarty_compile_dir'] = realpath(dirname(__FILE__) . '/../templates_c/');
+	$GLOBALS['cfg']['smarty_compile'] = 1;
+
+	$GLOBALS['cfg']['abs_root_url'] = '';
+	$GLOBALS['cfg']['safe_abs_root_url'] = '';
+
+	$GLOBALS['cfg']['auth_cookie_domain'] = parse_url($GLOBALS['cfg']['abs_root_url'], 1);
+	$GLOBALS['cfg']['auth_cookie_name'] = md5($GLOBALS['cfg']['auth_cookie_domain']) . "-a";
+
+	$GLOBALS['cfg']['pagination_per_page'] = 10;
+	$GLOBALS['cfg']['pagination_spill'] = 0;
+	$GLOBALS['cfg']['pagination_assign_smarty_variable'] = 1;
+
+	$GLOBALS['cfg']['email_from_name']	= '';
+	$GLOBALS['cfg']['email_from_email']	= '';
+	$GLOBALS['cfg']['auto_email_args']	= '';
+
+	$GLOBALS['cfg']['user'] = null;
+
+	$GLOBALS['cfg']['http_timeout'] = 3;
+	$GLOBALS['cfg']['http_timeout_solr'] = 10;
+
+	$GLOBALS['cfg']['check_notices'] = 1;
+
+	$GLOBALS['cfg']['db_profiling'] = 0;
+
+	$GLOBALS['cfg']['enable_feature_http_prefetch'] = 0;
+
+	$GLOBALS['cfg']['crumb_ttl_default'] = 300;	# seconds
+
+	$GLOBALS['cfg']['rewrite_static_urls'] = array(
+		# '/foo' => '/bar/',
+	);
+?>

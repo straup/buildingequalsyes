@@ -141,6 +141,30 @@
 			'provider' => 'yql.geo.places',
 		);
 
+		# generate a fullname
+
+		$parts = array(
+			'locality2',
+			'locality1',
+			'admin1',
+			'country',
+		);
+
+		$fullname = array();
+
+		foreach ($parts as $p){
+
+			if (! $row[$p]){
+				continue;
+			}
+
+			$fullname[] = $row[$p]['content'];
+		}
+
+		$loc['fullname'] = implode(", ", $fullname);
+
+		# get the parent WOE ID
+
 		$parent_id = 1;
 
 		if ($loc['placetype'] != 'Country'){
@@ -148,6 +172,9 @@
 		}
 
 		$loc['parent_woeid'] = $parent_id;
+
+		# Okay, good!
+
 		return $loc;
 	}
 
