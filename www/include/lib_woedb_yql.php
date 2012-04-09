@@ -36,6 +36,66 @@
 
 	function woedb_yql_fetch_hierarchy($woe){
 
+		$cache_key = "woedb_solr_hierarchy_{$woe['woeid']}";
+		$cache = cache_get($cache_key);
+
+		if ($cache['ok']){
+			return $cache['data'];
+		}
+
+		$query = "SELECT * FROM geo.places.ancestors WHERE descendant_woeid={$woe['woeid']}"; 
+		$rsp = _woedb_yql_api_call($query);
+
+		if (! $rsp['ok']){
+			return;
+		}
+
+ 		if (! $rsp['query']['count']){
+			return;
+		}
+
+		$hierarchy = array();
+
+		if (isset($more['include_self'])){
+			$hierarchy[] = $woe;
+		}
+
+		$placetypes = array(
+			'Town',
+			'State',
+			'Country',
+		);
+
+		# oh YQL... y u so dumb??
+
+		if ($rsp['query']['count'] == 1){
+
+			$rsp['query']['results']['place'] = array(
+				$rsp['query']['results']['place']
+			);
+		}
+
+		foreach ($rsp['query']['results']['place'] as $loc){
+
+			if (! in_array($loc['placeTypeName']['content'], $placetypes)){
+				continue;
+			}
+
+			$loc = _woedb_yql_normalize($loc);
+			$hierarchy[] = $loc;
+		}
+
+		cache_set($cache_key, $hierarchy, "cache locally");
+
+		return $hierarchy;
+	}
+
+	######################################################
+
+	function _woedb_yql_get_parent_woeid($woe){
+
+		$hier = woedb_yql_fetch_hierarchy($woe);
+		return $hier[0]['woeid'];
 	}
 
 	######################################################
@@ -67,7 +127,7 @@
 
 	function _woedb_yql_normalize($row){
 
-		return array(
+		$loc = array(
 			'woeid' => $row['woeid'],
 			'name' => $row['name'],
 			'placetype' => $row['placeTypeName']['content'],
@@ -80,6 +140,15 @@
 			'longitude' => $row['boundingBox']['northEast']['longitude'],
 			'provider' => 'yql.geo.places',
 		);
+
+		$parent_id = 1;
+
+		if ($loc['placetype'] != 'Country'){
+			$parent_id = _woedb_yql_get_parent_woeid($loc);
+		}
+
+		$loc['parent_woeid'] = $parent_id;
+		return $loc;
 	}
 
 	######################################################

@@ -32,9 +32,9 @@
 
 	#################################################################
 
-	function woedb_solr_fetch_hierarchy(&$woe){
+	function woedb_solr_fetch_hierarchy($woe){
 
-		$cache_key = "woedb_hierarchy_{$woe['woeid']}";
+		$cache_key = "woedb_solr_hierarchy_{$woe['woeid']}";
 		$cache = cache_get($cache_key);
 
 		if ($cache['ok']){
