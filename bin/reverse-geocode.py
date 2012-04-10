@@ -6,16 +6,16 @@ import sqlite3
 import urllib2
 import json
 import time
-import reversegeo
+import reverse_geoplanet
 
 from shapely.geometry import Polygon
 from shapely.geometry import LineString
 
-def munge(path) :
+def munge(path, reversegeo_endpoint) :
         
     #
 
-    rg = reversegeo.reversegeo()
+    rg = reverse_geoplanet.reverse_geoplanet(reversegeo_endpoint)
 
     dbconn = sqlite3.connect(path)
     dbcurs = dbconn.cursor()
@@ -97,4 +97,6 @@ def munge(path) :
 if __name__ == '__main__' :
 
     path = sys.argv[1]
-    munge(path)
+    reversegeo = sys.argv[2]
+
+    munge(path, reversegeo)

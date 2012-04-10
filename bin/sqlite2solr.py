@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import pysolr
-import reversegeo
 import os.path
 import sqlite3
 import sys
@@ -14,16 +13,11 @@ import shapely.wkt
 from shapely.geometry import Polygon
 from shapely.geometry import LineString
 
-geo = reversegeo.reversegeo('localhost')
-
 solr = pysolr.Solr('http://localhost:9999/solr/buildings')
 solr.delete(q='*:*')
 
 dbconn = sqlite3.connect('buildings.osm.db')
 dbcurs = dbconn.cursor()
-
-rgconn = sqlite3.connect('reversegeo.db')
-rgcurs = rgconn.cursor()
 
 last_woeid = 2147483647
 uid = last_woeid
@@ -117,73 +111,6 @@ while offset < count :
         if center :
             lat = center.y
             lon = center.x
-
-        """    
-        lat = "%.6f" % lat
-        lon = "%.6f" % lon
-
-        lat = float(lat)
-        lon = float(lon)
-        """
-
-        # guh...
-
-        short_lat = float("%.3f" % lat)
-        short_lon = float("%.3f" % lon)
-
-        gh = Geohash.encode(short_lat, short_lon, 8)
-
-        gh_sql = "SELECT country, region, locality, woeid FROM reversegeo WHERE geohash='%s'" % gh
-
-        rgcurs.execute(gh_sql)
-        _row = rgcurs.fetchone()
-
-        # GAH...why are most of these missing?
-
-        if _row:
-
-            country, region, locality, _woeid = _row
-
-            if country:
-                tags['woe:country'] = country
-
-            if region:
-                tags['woe:region'] = region
-
-            if locality:
-                tags['woe:locality'] = locality
-
-            if _woeid and _woeid not in (country, region, locality):
-                tags['woe:neighbourhood'] = _woeid
-
-        else:
-
-            # print "calling cloud.spum...."
-
-            print "[%s] re-reversegeocoding" % counter
-
-            woe = geo.reverse_geocode(lat, lon)
-
-            if woe:
-
-                try:
-                    rgcurs.execute("""INSERT INTO reversegeo (name, locality, woeid, region, created, longitude, placetype, geohash, country, latitude) VALUES (?,?,?,?,?,?,?,?,?,?)""", woe.values())
-                    rgconn.commit()
-                except Exception, e:
-                    print "FUCK"
-
-                _ids = []
-
-                for pl in ('country', 'region', 'locality'):
-                    if not woe.get(pl, False):
-                        break
-                    k = "woe:%s" % pl
-                    tags[k] = woe[pl]
-
-                    _ids.append(woe[pl])
-
-                if woe['woeid'] not in _ids:
-                    tags['woe:neighbourhood'] = woe['woeid']
 
         # tags
 

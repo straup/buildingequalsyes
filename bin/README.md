@@ -30,9 +30,9 @@ Like this:
 
 	$> bunzip2 planet-latest.osm.bz2
 	
-Next you'll need to grab and compile the [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter):
+Next you'll need to grab and compile the [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter) application:
 
-	$> wget -O - http://m.m.i24.cc/osmfilter.c |cc -x c - -O3 -o osmfilter
+	$> wget -O - http://m.m.i24.cc/osmfilter.c | cc -x c - -O3 -o osmfilter
 	
 Finally, to extract all the buildings:
 
@@ -48,8 +48,16 @@ Now you're going to move all that data in to a SQLite database because it just m
 Prepping the data (reverse geocoding)
 --
 
-	https://github.com/straup/reverse-geoplanet
+This part is a little involved. That's the bad news. The good news is that it's not actually hard. Here's what going on:
 
+* The code is going to plow through all the nodes (points) and ways (collections of points that form buildings) in the SQLite database, calculate the centroid and then ask Flickr to reverse geocode them: To convert the latitude and longitude coordinates in to a unique place ID for that building.
+
+* Rather than asking the Flickr servers over and over (and over) the code will look for an instance of a `reverse-geoplanet` server running that will proxy and cache the results of those reverse geocoding requests. In addition there is a shared library for talking to a reverse-geoplanet server that will create a local cache of those results so all those lookups can be a little faster. There are _a lot_ of buildings in OSM so every little bit helps.
+
+You'll need to grab [a copy of the reverse-geoplanet](https://github.com/straup/reverse-geoplanet) code from Github and then follow the [installation instructions](https://github.com/straup/reverse-geoplanet/blob/master/INSTALL.md) to get started. Like b=y itself the reverse-geoplanet server is a plain vanilla Flamework application and its only dependencies are Apache and PHP and MySQL.	
+
+	$> python reverse-geocode.py buildings.osm.db http://example.com/reverse-geoplanet/www/
+	
 Importing the data
 --
 
