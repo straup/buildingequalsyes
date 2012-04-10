@@ -17,7 +17,7 @@ Basically you're telling Gunicorn to load the `WSGITileServer` in the TileStache
 
 By default Gunicorn will listen for requests on port 8000.
 
-Next use curl (or your web browser) to request a tile from the `dithered` map provider. It should look the same as [example-tile.jpg](https://github.com/straup/buildingequalsyes/blob/master/tilestache/tilestache.cfg.example).
+Next use curl (or your web browser) to request a tile from the `dithered` map provider. It should look the same as [example-tile.jpg](https://github.com/straup/buildingequalsyes/blob/master/tilestache/example-tile.jpg).
 
 That's it!
 
