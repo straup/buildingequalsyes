@@ -42,7 +42,7 @@ The [example tilestache.cfg](https://github.com/straup/buildingequalsyes/blob/ma
 
 * **microsoft_aerial** - these are [proxied](http://tilestache.org/doc/TileStache.Providers.html#Proxy) aerial map tiles served up by Microsoft/Bing.
 
-* **dithered** - these are the `microsoft_aerial` tiles run through a 1-bit "dithering" filter using the [tilestache-atkinstache](http://straup.github.com/tilestache-atkinstache/) provider (which is included with this repo).
+* **dithered** - these are the `microsoft_aerial` tiles run through a 1-bit "dithering" filter using the [atkinstache](http://straup.github.com/tilestache-atkinstache/) provider (which is included with this repo).
 
 * **buildings** - these are tiles that contain nothing but buildings in OSM drawn with a white fill on a transparent background using the [map=yes](http://mapequalsyes.stamen.com/code/) provider (which is also included with this repo). It is important to understand/remember that this layer will reach out across the Internet and ask the MapQuest XAPI servers for data. For details, consult the [map=yes](http://mapequalsyes.stamen.com/) project.
 
