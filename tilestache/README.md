@@ -1,9 +1,7 @@
 TileStache (and Gunicorn)
 --
 
-[TileStache](http://www.tilestache.org/) is a "Python-based server application that can serve up map tiles based on rendered geographic data."
-
-[Gunicorn](http://gunicorn.org/) is a "Python WSGI HTTP Server for UNIX. It's a pre-fork worker model ported from Ruby's Unicorn project."
+[TileStache](http://www.tilestache.org/) is a "Python-based server application that can serve up map tiles based on rendered geographic data." [Gunicorn](http://gunicorn.org/) is a "Python WSGI HTTP Server for UNIX. It's a pre-fork worker model ported from Ruby's Unicorn project."
 
 Or: Gunicorn is the "Apache" for map tiles and TileStache is framework for generating those tiles. Technically you could run TileStache under Apache's `mod_python` bindings but I've had very bad luck doing that. Gunicorn has a few rough edges but as a tile server its actually pretty great.
 
@@ -40,9 +38,9 @@ In the example above Gunicorn is started with a single worker in the foreground.
 Map layers
 --
 
-The [example tilestache.cfg]() file contains five map "layers":
+The [example tilestache.cfg](https://github.com/straup/buildingequalsyes/blob/master/tilestache/tilestache.cfg.example) file contains five map "layers":
 
-* **microsoft_aerial** - these are proxied aerial map tiles served up by Microsoft/Bing
+* **microsoft_aerial** - these are [proxied](http://tilestache.org/doc/TileStache.Providers.html#Proxy) aerial map tiles served up by Microsoft/Bing.
 
 * **dithered** - these are the `microsoft_aerial` tiles run through a 1-bit "dithering" filter using the [tilestache-atkinstache](http://straup.github.com/tilestache-atkinstache/) provider (which is included with this repo).
 
