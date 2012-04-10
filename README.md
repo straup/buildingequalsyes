@@ -33,7 +33,7 @@ Finally, you import all the data in to Solr:
 The website (Apache + PHP + MySQL)
 --
 
-The website is built on top of [Flamework](). That means the core is nothing
+The website is built on top of [Flamework](https://github.com/exflickr/flamework). That means the core is nothing
 more than a vanilla Apache + PHP (+ MySQL) application that can be run out of a
 user's home directory or a top-level domain.
 
@@ -41,22 +41,22 @@ As of this writing the MySQL piece is entirely optional since it is only used
 for account management and editing buildings via OpenStreetMap neither of which
 are enabled (or stable yet).
 
-See the [INSTALL.md] document for details.
+See the [INSTALL.md](https://github.com/straup/buildingequalsyes/blob/master/INSTALL.md) document for details.
 
 The search-y bits (Solr)
 --
 
-buildingequalsyes uses the [Solr]() document index as its primary data
+buildingequalsyes uses the [Solr](https://lucene.apache.org/solr/) document index as its primary data
 store. That means the PHP code (above) needs to be able to connect to the
 designated Solr port, typically on localhost (read: the same machine).
 
-See the [solr/README.md]() document for details.
+See the [solr/README.md](https://github.com/straup/buildingequalsyes/blob/master/solr/README.md) document for details.
 
 The map tiles (TileStache)
 --
 
-Map tiles are generated and served using [TileStache](). I run TileStache under
-the [gunicorn]() server framework-thing-y because I like it and its stable but
+Map tiles are generated and served using [TileStache](http://www.tilestache.org/). I run TileStache under
+the [gunicorn](http://www.gunicorn.org/) server framework-thing-y because I like it and its stable but
 there are others.
 
-See the [tilestache/README.md]() document for details.
+See the [tilestache/README.md](https://github.com/straup/buildingequalsyes/blob/master/tilestache/README.md) document for details.

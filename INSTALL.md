@@ -1,11 +1,11 @@
-Installing buildingequalsyes
+Installing buildingequalsyes (the web application)
 --
 
 buildingequalsyes is built on top of [Flamework](https://github.com/exflickr/flamework) which means it's basically just a vanilla Apache + PHP application. You can run it as a dedicated virtual host or as a subdirectory of an existing host. 
 
 You will need to make a copy of the [config.php.example](https://github.com/straup/buildingequalsyes/blob/master/www/include/config.php.example) file and name it `config.php`. You will need to update this new file and add the various specifics for databases and third-party APIs.
 
-It uses [Solr]() as its datastore. Setup instructions and details for running Solr are located in the [solr/README.md] document. Instructions for load data in to your Solr instance are in [FIX ME].
+It uses [Solr](https://lucene.apache.org/solr/) as its datastore. Setup instructions and details for running Solr are located in the [solr/README.md] document. Instructions for load data in to your Solr instance are in [FIX ME].
 
 The basics
 ===
