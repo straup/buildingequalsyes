@@ -40,4 +40,14 @@ In the example above Gunicorn is started with a single worker in the foreground.
 buildingequalyes map providers
 --
 
+The [example tilestache.cfg]() file contains five map "layers":
 
+* **microsoft_aerial** - these are proxied aerial map tiles served up by Microsoft/Bing
+
+* **dithered** - these are the `microsoft_aerial` run through a 1-bit "dithering" filter using the [tilestache-atkinstache](http://straup.github.com/tilestache-atkinstache/) provider (which is included with this repo).
+
+* **buildings**
+
+* **buildings-outline**
+
+* **buildingequalyes** 
