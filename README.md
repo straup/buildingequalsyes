@@ -20,6 +20,19 @@ The site and the code is divided in to roughly four pieces:
 
 * The map tiles (TileStache)
 
+So, by the time you're done you'll be running three separate services:
+
+* Apache + PHP, presumably on port 80
+
+* Solr on some internal high number port, presumably on the same machine (as Apache)
+
+* TileStache also on some other high number port and proxied on port 80 (using
+  Apache or something like nginx)
+
+Technically, you'll also be running a fourth web application for doing reverse
+geocoding during the import process but that's a special case. Consult the
+[bin/README.md](https://github.com/straup/buildingequalsyes/blob/master/bin/README.md) document for details.
+
 The data itself
 --
 

@@ -1,8 +1,3 @@
-solr
-==
-
-**This works but needs better documentation** (read: you'll need to be familiar with Solr.)
-
 Quick start
 --
 
