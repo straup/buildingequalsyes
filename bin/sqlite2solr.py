@@ -28,16 +28,18 @@ rgcurs = rgconn.cursor()
 last_woeid = 2147483647
 uid = last_woeid
 
-count = 26161986
+count = 0
 offset = 0
 limit = 10000
 
 counter = 0
-
 docs = []
 
-# counter = offset
-# uid = 2150733647
+sql = "SELECT COUNT(id) FROM ways"
+dbcurs.execute(sql)
+
+row = dbcurs.fetchone()
+count = row[0]
 
 while offset < count :
 
