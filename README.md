@@ -1,34 +1,26 @@
 building=yes
 ==
 
-Four pieces:
+This is the source code for the [building=yes](http://buildingequalsyes.spum.org/) (b=y) website.
 
-* The raw data and the import process
+The site and the code is divided in to roughly four pieces:
 
-* The datastore
+* The raw data and the import process (a series of bespoke scripts)
 
-* The website / application itself
+* The datastore (Solr)
 
-* The map tiles
+* The website / application itself (Apache + PHP)
 
-Importing the data
+* The map tiles (TileStache)
+
+The data itself
 --
 
-First, you grab a copy of the planet.xml file from OpenStreetMap and extract the buildings:
+As of this writing the data is imported by grabbing a complete copy of the [OpenStreetMap (OSM) "planet" XML file](https://wiki.openstreetmap.org/wiki/Planet.osm), extracting all the buildings and then further post-processing the remaining data to reverse-geocode buildings and store them in a Solr document index.
 
-	planet-latest.osm -> extract-buildings.sh -> buildings.osm
-	
-Second, you extract all the nodes and ways in to a SQLite database:
+See the [bin/README.md](https://github.com/straup/buildingequalsyes/blob/master/bin/README.md) document for details.
 
-	buildings.osm -> osm2sqlite.py -> buildings.db
-
-Third, you reverse geocode all the ways (by first calculating their centroid):
-
-	buildings.db -> locatify-sqlite.py -> buildings.db
-	
-Finally, you import all the data in to Solr:
-
-	buildings.db -> sqlite2solr.py -> PROFIT!
+_There is a short-term goal/plan of creating an self-updating version of the site that would pull daily (hourly?) changes from the OSM servers but that work has not been started yet._
 
 The website (Apache + PHP + MySQL)
 --
@@ -43,7 +35,7 @@ are enabled (or stable yet).
 
 See the [INSTALL.md](https://github.com/straup/buildingequalsyes/blob/master/INSTALL.md) document for details.
 
-The search-y bits (Solr)
+The datastore and the search-y bits (Solr)
 --
 
 buildingequalsyes uses the [Solr](https://lucene.apache.org/solr/) document index as its primary data
@@ -60,3 +52,10 @@ the [gunicorn](http://www.gunicorn.org/) server framework-thing-y because I like
 there are others.
 
 See the [tilestache/README.md](https://github.com/straup/buildingequalsyes/blob/master/tilestache/README.md) document for details.
+
+Other stuff
+--
+
+As you see there are quite a lot of moving pieces and software. There is not a magic-pony tool for setting up everything but there is an example installation script that can be consulted: It is called suprisingly enough [ubuntu/install.sh](https://github.com/straup/buildingequalsyes/blob/master/ubuntu/install.sh)
+
+Although it is specific to Ubuntu-flavoured Linux distributions (and the `apt-*` package management tools) it does contain a list of all the various software packages that you'll need to have installed on any machines running b=y.
