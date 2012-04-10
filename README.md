@@ -3,6 +3,13 @@ building=yes
 
 This is the source code for the [building=yes](http://buildingequalsyes.spum.org/) (b=y) website.
 
+The code is available as-is under a [BSD license](https://github.com/straup/buildingequalsyes/blob/master/LICENSE) on first principles and in the hopes that it can serve as an example or learning tool for other projects. Or maybe you just want to run a private copy of b=y. That's your business. Patches and suggestions are not only welcome but encouraged.
+
+_As of this writing this isn't actually the source code running the b=y site itself. There are a few remaining gotchas to work out but that's just a question of time at this point. This is the new new. (20120410/straup)_
+
+How does it work
+--
+
 The site and the code is divided in to roughly four pieces:
 
 * The raw data and the import process (a series of bespoke scripts)

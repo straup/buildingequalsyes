@@ -35,9 +35,6 @@ By default Gunicorn will listen for requests on port 8000. Note: Because you wil
 
 * Running it behind a proxy using Apache itself either as virtual host or just a special path on the same host as your b=y instance.
 
-	RewriteEngine On
-	RewriteRule ^/tiles/(.*)	http://localhost:8000/$1 [P,L]
-
 In the example above Gunicorn is started with a single worker in the foreground. A sample [init.d](https://github.com/straup/buildingequalsyes/blob/master/tilestache/init.d/tilestache-gunicorn.sh) script for running TileStache/Gunicorn as an automated service. You'll need to update things like the path to your copy of b=y and the number of workers (this will depend on the hardware you're using) but otherwise it should Just Work (tm).
 
 buildingequalyes map providers

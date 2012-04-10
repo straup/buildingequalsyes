@@ -54,4 +54,9 @@ ${INSTALL} openjdk-6-jre-headless
 ${FIX_DPKG}
 
 ln -s  /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
+ln -s /etc/apache2/mods-available/proxy.conf /etc/apache2/mods-enabled/
+ln -s /etc/apache2/mods-available/proxy.load /etc/apache2/mods-enabled/
+ln -s /etc/apache2/mods-available/proxy_http.load /etc/apache2/mods-enabled/
+ln -s /etc/apache2/mods-available/headers.load /etc/apache2/mods-enabled/
+
 /etc/init.d/apache2 restart
