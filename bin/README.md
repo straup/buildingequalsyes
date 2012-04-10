@@ -19,6 +19,13 @@ Finally, you import all the data in to Solr:
 
 Each one of these steps is slow in their own way so take the time to read through this entire document before you start.
 
+Caveats
+--
+
+I am almost 100% certain there are better ways to do this. Since launching the site I have not been able to revisit the import process. What you see here are the results of me cobbling a lot of different pieces together just in order to get things working. In many instances speed (and elegance) was sacrificed in the goal of the finished results, namely whether the final data was interesting enough to build a website around.
+
+Patches and suggestions are definitely welcome.
+
 Extracting buildings from OSM
 --
 
@@ -45,6 +52,8 @@ Now you're going to move all that data in to a SQLite database because it just m
 
 	$> python osm2sqlite.py buildings.osm
 
+This will create a new file called `buildings.osm.db`. It will be large.
+
 Prepping the data (reverse geocoding)
 --
 
@@ -56,6 +65,8 @@ This part is a little involved. That's the bad news. The good news is that it's 
 
 You'll need to grab [a copy of the reverse-geoplanet](https://github.com/straup/reverse-geoplanet) code from Github and then follow the [installation instructions](https://github.com/straup/reverse-geoplanet/blob/master/INSTALL.md) to get started. Like b=y itself the reverse-geoplanet server is a plain vanilla Flamework application and its only dependencies are Apache and PHP and MySQL.	
 
+I've included the libraries you'll need to talk to a reverse-geoplanet server in to this repo so all you'll need to do is include its URL when you run the `reverse-geocode.py` script. Like this:
+
 	$> python reverse-geocode.py buildings.osm.db http://example.com/reverse-geoplanet/www/
 	
 Importing the data
@@ -64,4 +75,5 @@ Importing the data
 Honestly, this one probably still has some bugs or gotchas in it. On the other hand it's not very complicated. Essentially you're just copying all the `ways` in the SQLite database in to Solr and generating a new unique 64-bit ID along the way.
 
 	$> python sqlite2solr.py
+
 
