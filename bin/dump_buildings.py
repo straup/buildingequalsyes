@@ -6,7 +6,7 @@ import json
 import sys
 woeid = sys.argv[1]
 
-bldgdb = pysolr.Solr('http://localhost:8985/solr/buildings')
+bldgdb = pysolr.Solr('http://localhost:9999/solr/buildings')
 
 query="parent_woeid:%s OR tags:woe/*/%s" % (woeid, woeid)
 

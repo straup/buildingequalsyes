@@ -1,7 +1,7 @@
 solr
 ==
 
-**This works but needs better documentation** (read: you'll need to be familiar with Solr if you want to do anything in the meantime.)
+**This works but needs better documentation** (read: you'll need to be familiar with Solr.)
 
 Quick start
 --
@@ -14,7 +14,12 @@ This will start a Solr endpoint for buildingequalsyes on port 9999. You can quer
 it by typing:
 
 	curl http://localhost:9999/solr/buildingequalsyes/select?q=*:*
-	
+
+There is also an `init.d` script for automating a lot of the boring details
+around starting and stopping Solr:
+
+[https://github.com/straup/buildingequalsyes/blob/master/solr/init.d/solr.sh](https://github.com/straup/buildingequalsyes/blob/master/solr/init.d/solr.sh)
+
 What's going on here?
 --
 

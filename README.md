@@ -41,10 +41,12 @@ As of this writing the MySQL piece is entirely optional since it is only used
 for account management and editing buildings via OpenStreetMap neither of which
 are enabled (or stable yet).
 
+See the [INSTALL.md] document for details.
+
 The search-y bits (Solr)
 --
 
-buildignequalsyes uses the [Solr]() document index as its primary data
+buildingequalsyes uses the [Solr]() document index as its primary data
 store. That means the PHP code (above) needs to be able to connect to the
 designated Solr port, typically on localhost (read: the same machine).
 

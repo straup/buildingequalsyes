@@ -16,7 +16,7 @@ from shapely.geometry import LineString
 
 geo = reversegeo.reversegeo('localhost')
 
-solr = pysolr.Solr('http://localhost:8985/solr/buildings')
+solr = pysolr.Solr('http://localhost:9999/solr/buildings')
 solr.delete(q='*:*')
 
 dbconn = sqlite3.connect('buildings.osm.db')
